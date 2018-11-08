@@ -24,7 +24,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class User extends BaseEntity{
-
+	
     private String username;
     private String password;
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
@@ -41,6 +41,8 @@ public class User extends BaseEntity{
 		this.roles = roles;
 		this.active = active;
 	}
+	
+
 	public String getUsername() {
 		return username;
 	}

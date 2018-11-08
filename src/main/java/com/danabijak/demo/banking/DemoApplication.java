@@ -22,23 +22,26 @@ import com.danabijak.demo.banking.services.UserService;
 @SpringBootApplication
 public class DemoApplication {
     
-
-    @Bean
-    public CommandLineRunner setupDefaultUser(UserService service) {
-        return args -> {
-            service.save(new User(
-                    "user", //username
-                    "user", //password
-Arrays.asList(new Role("USER"), new Role("ACTUATOR")),//roles 
-                    true//Active
-            ));
-        };
-    }
+//
+//    @Bean
+//    public CommandLineRunner setupDefaultUser(UserService service) {
+//        return args -> {
+//            service.save(new User(
+//                    "user", //username
+//                    "user", //password
+//Arrays.asList(new Role("USER"), new Role("ACTUATOR")),//roles 
+//                    true//Active
+//            ));
+//        };
+//    }
+	
     
     @Bean
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
-    }    
+    }
+    
+    
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);

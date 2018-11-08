@@ -15,5 +15,9 @@ import lombok.Getter;
 public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
+    
+    public long getId() {
+    	return id;
+    }
 }
