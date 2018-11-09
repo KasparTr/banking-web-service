@@ -16,7 +16,7 @@ import com.danabijak.demo.banking.repositories.UserRepository;
 @Component
 public class UserServiceCommandlineRunner implements CommandLineRunner{
 	
-	private static final Logger log =  LoggerFactory.logger(UserDAOServiceCommandlineRunner.class);
+	private static final Logger log =  LoggerFactory.logger(UserServiceCommandlineRunner.class);
 	
 	@Autowired
 	private UserService userService;

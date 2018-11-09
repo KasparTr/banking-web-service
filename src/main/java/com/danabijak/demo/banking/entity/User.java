@@ -23,7 +23,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class User extends BaseEntity{
+public class User extends TransactionalEntity{
 	
     private String username;
     private String password;
@@ -32,10 +32,12 @@ public class User extends BaseEntity{
     private boolean active;
     
     
-    User(){}
+    User(){
+    	super("unk");
+    }
     
 	public User(String username, String password, List<Role> roles, boolean active) {
-		super();
+		super(username);
 		this.username = username;
 		this.password = password;
 		this.roles = roles;
@@ -43,6 +45,7 @@ public class User extends BaseEntity{
 	}
 	
 	public User(String username, String password){
+		super(username);
 		this.username = username;
 		this.password = password;
 	}

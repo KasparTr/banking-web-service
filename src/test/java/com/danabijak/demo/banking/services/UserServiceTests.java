@@ -70,24 +70,18 @@ public class UserServiceTests {
 	}
 	
 	@Test(expected = UserObjectNotValidException.class)
-	public void testInsertActive_user_object_faulty() {
+	public void testInsertBanking_throw_user_object_faulty() {
 		User testUser = new User(FAULTY_USERNAME_EXAMPLE, FAULTY_PASSWORD_EXAMPLE);
-		userService.insertActive(testUser);
+		userService.insertBanking(testUser);
 	}
 	
 	@Test
-	public void testInsertActive_repo_is_invoked() {
+	public void testInsertBanking_repo_is_invoked() {
 		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		userService.insertActive(testUser);
+		userService.insertBanking(testUser);
 		verify(userRepository).save(testUser); 
 	}
 	
-	@Test
-	public void testInsertActive_user_is_active() {
-		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		User nuser = userService.insertActive(testUser);
-		assertTrue(nuser.isActive());
-	}
 	
 	@Test
 	public void testInsertAdmin_repo_is_invoked() {
@@ -95,17 +89,7 @@ public class UserServiceTests {
 		userService.insertAdmin(testUser);
 		verify(userRepository).save(testUser); 
 	}
-	
-	@Test
-	public void testInsertAdmin_user_is_admin() {
-		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		userService.insertAdmin(testUser);
-		boolean adminRoleFound = false;
-		for(Role role : testUser.getRoles()) {
-			if(role.getName() == Role.NAME.ADMIN) adminRoleFound = true;
-		}
-		assertTrue(adminRoleFound);
-	}
+
 	
 	@Test
 	public void testFind_correct_user_is_found() {
