@@ -19,21 +19,25 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Role extends BaseEntity{
+	
+	public enum NAME {
+	    USER, ACTUATOR, ADMIN
+	} 
 
-    private String name;
+    private NAME name;
 
     Role(){}
     
-	public Role(String name) {
+	public Role(NAME name) {
 		super();
 		this.name = name;
 	}
 
-	public String getName() {
+	public NAME getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(NAME name) {
 		this.name = name;
 	}
     
