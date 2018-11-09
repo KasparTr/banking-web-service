@@ -1,11 +1,23 @@
 package com.danabijak.demo.banking.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
+import org.passay.DigitCharacterRule;
+import org.passay.LengthRule;
+import org.passay.LowercaseCharacterRule;
+import org.passay.PasswordData;
+import org.passay.PasswordValidator;
+import org.passay.RuleResult;
+import org.passay.SpecialCharacterRule;
+import org.passay.UppercaseCharacterRule;
+import org.passay.WhitespaceRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +27,9 @@ import org.springframework.stereotype.Service;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.exceptions.UserNotFoundException;
+import com.danabijak.demo.banking.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.exceptions.UserSavingException;
+import com.danabijak.demo.banking.model.UserValidationReport;
 import com.danabijak.demo.banking.repositories.UserRepository;
 
 @Component
@@ -31,27 +45,19 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 	
 	public User insertActive(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR)));
-		user.setActive(true);
-
-		userRepository.save(user);
-		
-		log.info("New User was created: " + user.getId());
-        
-		return user;
+		return insertUser(
+				user, 
+				true,
+				Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.ADMIN))
+			);
     }
 	
 	public User insertAdmin(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.ADMIN)));
-		user.setActive(true);
-
-		userRepository.save(user);
-		
-		log.info("New Admin was created: " + user.getId());
-        
-		return user;
+		return insertUser(
+					user, 
+					true,
+					Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.ADMIN))
+				);
     }
 	
 	public User find(long id) {
@@ -71,5 +77,26 @@ public class UserService {
 		else 
 			return users;
     }
+	
+	private User insertUser(User user, Boolean active, List<Role> roles) {
+		// TODO: Test this!!
+		UserValidatorService uvs = new UserValidatorServiceImpl();
+		UserValidationReport uvr = uvs.validateClientSentUser(user);
+		if(uvr.valid) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setRoles(roles);
+			user.setActive(active);
+
+			userRepository.save(user);
+			
+			log.info("New User was created: " + user.getId());
+	        
+			return user;
+		}
+		else
+			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
+	}
+	
+	
 
 }
