@@ -23,7 +23,7 @@ import com.danabijak.demo.banking.model.UserValidationReport;
 import com.danabijak.demo.banking.repositories.UserRepository;
 
 @Component
-public class UserValidatorServiceImpl implements UserValidatorService{
+public class UserValidatorServiceImpl implements ValidatorService{
 	
 	
 	@Autowired
@@ -31,21 +31,46 @@ public class UserValidatorServiceImpl implements UserValidatorService{
 
 	@Override
 	public UserValidationReport validateClientSentUser(User user) {
-		
 		// TODO: Break this method down
-		
 		UserValidationReport report;
 		boolean isUserValid = true;
 		List<String> faults = new ArrayList<>();
 		
-		// check if User exists
-		Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
-		if(existingUser.isPresent()) {
+		if(isUserTaken(user)){
 			isUserValid = false;
-			faults.add("Username exists");
+			faults.add("Username taken");
 		}
 		
-		// check for password
+		
+		List<String> passwordFaults = getPasswordFaults(user.getPassword());
+		if(passwordFaults != null){
+			isUserValid = false;
+			faults.addAll(passwordFaults);
+		}
+		
+				
+		if(!isUsernameValid(user.getUsername())){
+        	isUserValid = false;
+        	faults.add("Username must be a valid email");
+        }
+	 
+		 
+		if(!isUserValid) {
+			Optional<List<String>> faultyParts = Optional.of(faults);
+			report = new UserValidationReport(false, faultyParts);
+		}else 
+			report = new UserValidationReport(true);
+		
+		return report;
+	}
+	
+	public boolean isUsernameValid(String username) {
+		Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+        Matcher mat = pattern.matcher(username);
+        return mat.matches();
+	}
+	
+	public List<String> getPasswordFaults(String password) {
 		PasswordValidator validator = new PasswordValidator(Arrays.asList(
 				new LengthRule(8,20),
 				new UppercaseCharacterRule(1),
@@ -53,29 +78,20 @@ public class UserValidatorServiceImpl implements UserValidatorService{
 				new DigitCharacterRule(1),
 				new SpecialCharacterRule(1)
 			));
-		RuleResult result = validator.validate(new PasswordData(user.getPassword()));
-		if(!result.isValid()){
-			isUserValid = false;
-			faults.addAll(validator.getMessages(result));
-		}
+		RuleResult result = validator.validate(new PasswordData(password));
 		
-		// check for username aka email
-		Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
-        Matcher mat = pattern.matcher(user.getUsername());
-
-        if(!mat.matches()){
-        	isUserValid = false;
-        	faults.add("username must be a valid email");
-        }
+		if(result.isValid())
+			return null;
+		else
+			return validator.getMessages(result);
+	}
+	
+	public boolean isUserTaken(User user) {
+		Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
+		if(existingUser.isPresent()) return true;
 		
-		if(!isUserValid) {
-			Optional<List<String>> faultyParts = Optional.of(faults);
-			report = new UserValidationReport(false, faultyParts);
-		}else {
-			report = new UserValidationReport(true);
-
-		}
-		return report;
+		return false;
+		
 	}
 
 	

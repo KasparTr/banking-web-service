@@ -44,20 +44,41 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private ValidatorService uvs;
+
+	
 	public User insertActive(User user) {
-		return insertUser(
-				user, 
-				true,
-				Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.ADMIN))
-			);
+		UserValidationReport uvr = uvs.validateClientSentUser(user);
+		if(uvr.valid) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR)));
+			user.setActive(true);
+
+			userRepository.save(user);
+			
+			log.info("New User was created: " + user.getId());
+			return user;
+		}
+		else
+			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
     }
 	
 	public User insertAdmin(User user) {
-		return insertUser(
-					user, 
-					true,
-					Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.ADMIN))
-				);
+		UserValidationReport uvr = uvs.validateClientSentUser(user);
+		if(uvr.valid) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.ADMIN)));
+			user.setActive(true);
+
+			userRepository.save(user);
+			
+			log.info("New User was created: " + user.getId());
+			return user;
+		}
+		else
+			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
+
     }
 	
 	public User find(long id) {
@@ -78,25 +99,6 @@ public class UserService {
 			return users;
     }
 	
-	private User insertUser(User user, Boolean active, List<Role> roles) {
-		// TODO: Test this!!
-		UserValidatorService uvs = new UserValidatorServiceImpl();
-		UserValidationReport uvr = uvs.validateClientSentUser(user);
-		if(uvr.valid) {
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			user.setRoles(roles);
-			user.setActive(active);
 
-			userRepository.save(user);
-			
-			log.info("New User was created: " + user.getId());
-	        
-			return user;
-		}
-		else
-			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
-	}
-	
-	
 
 }

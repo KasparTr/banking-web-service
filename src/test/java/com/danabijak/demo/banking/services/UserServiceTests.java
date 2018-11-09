@@ -18,11 +18,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.exceptions.UserNotFoundException;
+import com.danabijak.demo.banking.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.repositories.UserRepository;
 import com.danabijak.demo.banking.services.UserService;
 import com.danabijak.demo.banking.entity.Role;
@@ -36,6 +38,15 @@ public class UserServiceTests {
 	
 	private static long EXISTING_USER_ID = 2000;
 	private static long NON_EXISTING_USER_ID = 4040;
+	
+	private static String FAULTY_USERNAME_EXAMPLE = "test";
+	private static String VALID_USERNAME_EXAMPLE = "test@email.com";
+	
+	private static String FAULTY_PASSWORD_EXAMPLE = "1234";
+	private static String VALID_PASSWORD_EXAMPLE = "pAS24@a3asd2KSH";
+
+	
+	
 	
 	@Mock
 	private UserRepository userRepository;
@@ -51,42 +62,46 @@ public class UserServiceTests {
 	    setUpIsDone = true;
 	    
 	    // Change Mocks behavior for user queries
-	    User nUser = new User("existingUserName", "existingUserPsw");
+	    User nUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
 	    when(userRepository.findById(EXISTING_USER_ID)).thenReturn(Optional.of(nUser));
 	    
 	    Optional<User> emptyUser = Optional.empty();
 	    when(userRepository.findById(NON_EXISTING_USER_ID)).thenReturn(emptyUser);
 	}
 	
+	@Test(expected = UserObjectNotValidException.class)
+	public void testInsertActive_user_object_faulty() {
+		User testUser = new User(FAULTY_USERNAME_EXAMPLE, FAULTY_PASSWORD_EXAMPLE);
+		userService.insertActive(testUser);
+	}
 	
 	@Test
 	public void testInsertActive_repo_is_invoked() {
-		User testUser = new User("testName", "testPassword");
+		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
 		userService.insertActive(testUser);
 		verify(userRepository).save(testUser); 
 	}
 	
 	@Test
 	public void testInsertActive_user_is_active() {
-		User testUser = new User("testName", "testPassword");
-		userService.insertActive(testUser);
-		assertTrue(testUser.isActive());
+		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+		User nuser = userService.insertActive(testUser);
+		assertTrue(nuser.isActive());
 	}
 	
 	@Test
 	public void testInsertAdmin_repo_is_invoked() {
-		User testUser = new User("testAdminName", "testAdminPassword");
+		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
 		userService.insertAdmin(testUser);
 		verify(userRepository).save(testUser); 
 	}
 	
 	@Test
 	public void testInsertAdmin_user_is_admin() {
-		User testUser = new User("testName", "testPassword");
-		User aUser = userService.insertAdmin(testUser);
+		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+		userService.insertAdmin(testUser);
 		boolean adminRoleFound = false;
-		for(Role role : aUser.getRoles()) {
-			System.out.println(role.getName().toString());
+		for(Role role : testUser.getRoles()) {
 			if(role.getName() == Role.NAME.ADMIN) adminRoleFound = true;
 		}
 		assertTrue(adminRoleFound);
@@ -95,7 +110,7 @@ public class UserServiceTests {
 	@Test
 	public void testFind_correct_user_is_found() {
 		User foundUser = userService.find(EXISTING_USER_ID);
-		assertEquals(foundUser.getUsername(), "existingUserName");
+		assertEquals(foundUser.getUsername(), VALID_USERNAME_EXAMPLE);
 	}
 	
 	@Test(expected = UserNotFoundException.class)
@@ -113,13 +128,11 @@ public class UserServiceTests {
 	@Test
 	public void testGetAll_return_users_list() {
 		List<User> returnableUsers = new ArrayList<>();
-		returnableUsers.add(new User("nonom", "nonm"));
+		returnableUsers.add(new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE));
 		
 	    when(userRepository.findAll()).thenReturn(returnableUsers);
 
 		List<User> users = userService.getAll();
 		assertTrue(users.size() > 0);
 	}
-	
-
 }
