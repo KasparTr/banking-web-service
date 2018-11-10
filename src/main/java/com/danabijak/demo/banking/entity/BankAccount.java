@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 import org.joda.money.CurrencyUnit;
 /*
  * BankAccount is the holder of the balance and can be attached to any transactional entity (e.g User, ATM, Application etc).
- * TODO: Currently there are not BankAccount related limits possible (only entity based). Create them in future.
+ * TODO: Currently there are no BankAccount related limits possible. Create them in future.
  */
 @Entity
 public class BankAccount {

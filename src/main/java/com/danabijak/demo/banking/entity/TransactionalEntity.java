@@ -16,10 +16,11 @@ import org.joda.money.Money;
 import com.danabijak.demo.banking.exceptions.BankAccountException;
 
 /*
- * TransactionalEntity is any actor in the system who is involved in transactions.
+ * TransactionalEntity is any actor in the system who is involved with transactions.
  * This can be for example a User, ATM, an Application or other.
- * Each TransactionalEntity will have entity based limits on transactions.
  * 
+ * Props:
+ * 	EntityTransferLimits - Entity based limits on transactions not to mix with account related limits..
  */
 @Entity
 public abstract class TransactionalEntity extends BaseEntity {
@@ -28,7 +29,7 @@ public abstract class TransactionalEntity extends BaseEntity {
 	private EntityTransferLimits limits;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, optional=true)
-	private BankAccount bankAccount;
+	private BankAccount bankAccount;		// Didn't make Java Optional cause of @OneToOne constraints. TODO: fix!
 	private String name;
 	
 	public TransactionalEntity(String name) {

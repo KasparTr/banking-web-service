@@ -26,6 +26,9 @@ public class UserFactoryImpl implements UserFactory {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	/*
+	 * Allows to create a default banking user that gets a bank account attached with default starting balance amount.
+	 */
 	@Override
 	public User makeDefaultBankingUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));

@@ -15,8 +15,11 @@ import org.joda.money.Money;
  * EntityTransferLimits are entity (e.g User, ATM, App) specific limits that affect the transactions this entity is involved in.
  * NB! These limits will not overwrite any account or balance related limits.
  * Limits are set with default values.
- * Limits are currency based and currency shall be injected upon instantiation.
- * NOT TO BE MISTAKEN: With BankAccount limits that affect a specific Account, not an actor (user, atm, app, etc).!
+ * Limits are not currency based and so they will append to any currency the BankAccount my be subjected to.
+ * NOT TO BE MISTAKEN: With BankAccount limits that affect a specific Account, not an antity (user, atm, app, etc).!
+ * Props:
+ * 	availableForWithdrawalAmount - this is an amount that an entity can, at max, withdraw at any point in time (other limits may apply)
+ * 	availableToDepositAmount - -||- deposit
  */
 @Entity
 public class EntityTransferLimits {
