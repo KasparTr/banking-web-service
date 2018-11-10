@@ -33,6 +33,8 @@ public class BankAccount {
 	private Balance balance;
 	private STATUS status;
 	
+	BankAccount(){}
+	
 	public BankAccount(CurrencyUnit currency, String name) {
 		super();
 		this.name = name;

@@ -33,6 +33,8 @@ public abstract class TransactionalEntity extends BaseEntity {
 	private BankAccount bankAccount;		// Didn't make Java Optional cause of @OneToOne constraints. TODO: fix!
 	private String name;
 	
+	TransactionalEntity(){}
+	
 	public TransactionalEntity(String name) {
 		super();
 		this.name = name;

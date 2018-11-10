@@ -20,6 +20,14 @@ public class Transaction {
 	public final TransactionalEntity source;
 	public final String details;
 	
+	Transaction(){
+		this.created = null;
+		this.amount = null;
+		this.beneficiary = null;
+		this.source = null;
+		this.details = null;
+	}
+	
 	public Transaction(Money amount, TransactionalEntity beneficiary, TransactionalEntity source, String details) {
 		this.created = new Date();
 		this.amount = amount;

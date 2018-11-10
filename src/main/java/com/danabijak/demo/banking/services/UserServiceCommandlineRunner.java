@@ -29,8 +29,8 @@ public class UserServiceCommandlineRunner implements CommandLineRunner{
 	private void createAdminUser() {
 		try {
 			userService.insertAdmin(new User(
-		              "admin",
-		              "admin"));
+		              "admin@bank.com",
+		              "admin123@ASDF"));
 		}catch(Exception e) {
 			log.error("Default Admin User not created: " + e.getMessage());
 		}

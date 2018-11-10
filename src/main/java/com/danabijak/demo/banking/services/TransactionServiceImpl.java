@@ -17,7 +17,7 @@ import com.danabijak.demo.banking.repositories.TransactionIntentRepository;
 import com.danabijak.demo.banking.repositories.TransactionRepository;
 
 @Component
-public abstract class TransactionServiceImpl implements TransactionService{
+public class TransactionServiceImpl implements TransactionService{
 	
 	@Autowired
 	private TransactionRepository transactionRepo;

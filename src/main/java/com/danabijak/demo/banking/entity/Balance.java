@@ -3,9 +3,13 @@ package com.danabijak.demo.banking.entity;
 import java.math.BigDecimal;
 import java.util.Currency;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
@@ -23,8 +27,10 @@ public class Balance {
 	@Id
 	@GeneratedValue
 	private long id;
+	@NotNull
 	private Money total;
 
+	Balance(){}
 	
 	public Balance(CurrencyUnit currency) {
 		super();

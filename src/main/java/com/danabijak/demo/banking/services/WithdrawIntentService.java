@@ -1,10 +1,16 @@
 package com.danabijak.demo.banking.services;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Component;
+
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.model.ValidationReport;
 import com.danabijak.demo.banking.validators.TransactionIntentValidator;
 import com.danabijak.demo.banking.validators.WithdrawIntentValidator;
 
+@Component
+@Resource(name="withdrawIntentService")
 public class WithdrawIntentService extends TransactionIntentServiceImpl{
 
 	@Override

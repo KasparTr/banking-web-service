@@ -29,7 +29,7 @@ public class TransactionIntent {
 	public final Date createdAt;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	public final TransferStatus status;
+	public final TransactionIntentStatus status;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	public final TransactionalEntity beneficiary;	//to
@@ -48,6 +48,13 @@ public class TransactionIntent {
 	private String details;
 	private Date transferable;
 
+	TransactionIntent(){
+		this.amount= null;
+		this.createdAt = null;
+		this.status = null;
+		this.beneficiary = null;
+		this.source = null;
+	}
 	
 	public TransactionIntent(TransactionIntentBuilder builder) {
         this.amount = builder.amount;

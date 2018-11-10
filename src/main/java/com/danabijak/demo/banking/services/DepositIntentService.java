@@ -1,10 +1,16 @@
 package com.danabijak.demo.banking.services;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Component;
+
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.model.ValidationReport;
 import com.danabijak.demo.banking.validators.DepositIntentValidator;
 import com.danabijak.demo.banking.validators.TransactionIntentValidator;
 
+@Component
+@Resource(name="depositIntentService")
 public class DepositIntentService extends TransactionIntentServiceImpl{
 
 	@Override
@@ -25,7 +31,7 @@ public class DepositIntentService extends TransactionIntentServiceImpl{
 			intent.beneficiary.getLimits().decreaseAllowedDeposit(intent.amount.getAmount());
 			
 			// TODO: Replace handover to TransactionService with a publishing to a TransactionIntentPool
-			TransactionService depositService = new DepositService();
+			TransactionService depositService = new TransactionServiceImpl();
 			depositService.porcess(intent);
 		}
 	}

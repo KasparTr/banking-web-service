@@ -40,26 +40,28 @@ public class UserController {
 	
 	
 	@GetMapping("/services/users")
-	public List<User> getAllUsers(){
-		return userService.getAll();
+	public ResponseEntity<List<User> > getAllUsers(){
+		return ResponseEntity.ok(userService.getAll());
 	}
 	
 	@GetMapping("/services/users/{id}")
-	public User findById(@PathVariable long id){
-		return userService.find(id);
+	public ResponseEntity<User> findById(@PathVariable long id){
+		return ResponseEntity.ok(userService.find(id));
 	}
 	
 	@PostMapping("/register")
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		User savedUser = userService.insertBanking(user);
 		
+		return ResponseEntity.ok(savedUser);
 		
-		URI location = ServletUriComponentsBuilder
-			.fromCurrentRequest()
-			.path("/{id}")
-			.buildAndExpand(savedUser.getId()).toUri();
 		
-		return ResponseEntity.created(location).build();
+//		URI location = ServletUriComponentsBuilder
+//			.fromCurrentRequest()
+//			.path("/{id}")
+//			.buildAndExpand(savedUser.getId()).toUri();
+//		
+//		return ResponseEntity.created(location).build();
 		
 	}
 	
