@@ -10,16 +10,18 @@ import javax.persistence.Id;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
-/*
- * (Data Transfer Object)
+/**
  * EntityTransferLimits are entity (e.g User, ATM, App) specific limits that affect the transactions this entity is involved in.
  * NB! These limits will not overwrite any account or balance related limits.
  * Limits are set with default values.
  * Limits are not currency based and so they will append to any currency the BankAccount my be subjected to.
- * NOT TO BE MISTAKEN: With BankAccount limits that affect a specific Account, not an antity (user, atm, app, etc).!
+ * NOT TO BE MISTAKEN: With BankAccount limits that affect a specific Account, not an entity (user, atm, app, etc).!
  * Props:
- * 	availableForWithdrawalAmount - this is an amount that an entity can, at max, withdraw at any point in time (other limits may apply)
- * 	availableToDepositAmount - -||- deposit
+ * 	allowedWithdrawalAmount - this is the max amount that an entity could potentially withdraw at any point in time (other limits will apply)
+ * 	allowedDepositAmount - -||- deposit
+ * 
+ * NB! These limits do not depend on the Balance of a bank account or other factors that may affect the overall transaction limitations.
+ * (Not all entities have a bank account but all entities will have some limits to their operations)
  */
 @Entity
 public class EntityTransferLimits {
@@ -39,12 +41,13 @@ public class EntityTransferLimits {
 	public final BigDecimal maxDailyDepositAmount;
 	public final BigDecimal minDepositAmount;
 	
-	private BigDecimal availableForWithdrawalAmount;
-	private BigDecimal availableToDepositAmount;
+	private BigDecimal allowedWithdrawalAmount;
+	private BigDecimal allowedDepositAmount;
 	
 	/*
 	 * Initiate with default values stated in class TransferLimits.DEFAULT_LIMITS
 	 * Specify in which currency the limits are set.
+	 * TODO: Set up constraints on the allowed limits (cannot be negative)
 	 */
 	public EntityTransferLimits() {
 		super();
@@ -54,37 +57,37 @@ public class EntityTransferLimits {
 		this.maxDailyDepositAmount = DEFAULT_LIMITS.MAX_DAILY_DEPOSIT;
 		this.minDepositAmount = DEFAULT_LIMITS.MIN_DEPOSIT;
 		
-		this.availableForWithdrawalAmount = this.maxDailyWithdrawAmount;
-		this.availableToDepositAmount = this.maxDailyDepositAmount;
+		this.allowedWithdrawalAmount = this.maxDailyWithdrawAmount;
+		this.allowedDepositAmount = this.maxDailyDepositAmount;
 	}
 	
-	public void resetMoneyAvailable() {
-		this.availableForWithdrawalAmount = this.maxDailyWithdrawAmount;
-		this.availableToDepositAmount = this.maxDailyDepositAmount;
+	public void resetAllowedLimits() {
+		this.allowedWithdrawalAmount = this.maxDailyWithdrawAmount;
+		this.allowedDepositAmount = this.maxDailyDepositAmount;
 	}
 	
-	public void decreaseAvailableForWithdrawal(BigDecimal amount) {
-		this.availableForWithdrawalAmount = availableForWithdrawalAmount.add(amount);
+	public void decreaseAllowedWithdrawal(BigDecimal amount) {
+		this.allowedWithdrawalAmount = allowedWithdrawalAmount.subtract(amount);
 	}
 	
-	public void increaseAvailableForWithdrawal(BigDecimal amount) {
-		this.availableForWithdrawalAmount = availableForWithdrawalAmount.add(amount);
+	public void increaseAllowedWithdrawal(BigDecimal amount) {
+		this.allowedWithdrawalAmount = allowedWithdrawalAmount.add(amount);
 	}
 	
-	public void decreaseAvailableToDeposit(BigDecimal amount) {
-		this.availableToDepositAmount = availableToDepositAmount.add(amount);
+	public void decreaseAllowedDeposit(BigDecimal amount) {
+		this.allowedDepositAmount = allowedDepositAmount.subtract(amount);
 	}
 	
-	public void increaseAvailableToDeposit(BigDecimal amount) {
-		this.availableToDepositAmount = availableToDepositAmount.add(amount);
+	public void increaseAllowedDeposit(BigDecimal amount) {
+		this.allowedDepositAmount = allowedDepositAmount.add(amount);
 	}
 	
-	public BigDecimal getAvailableForWithdrawal() {
-		return this.availableForWithdrawalAmount;
+	public BigDecimal getAllowedWithdrawal() {
+		return this.allowedWithdrawalAmount;
 	}
 	
-	public BigDecimal getAvailableToDeposit() {
-		return this.availableToDepositAmount;
+	public BigDecimal getAllowedDeposit() {
+		return this.allowedDepositAmount;
 	}
 	
 }

@@ -16,33 +16,35 @@ import com.danabijak.demo.banking.model.TransactionIntentBuilder;
  * TransactionIntent is an intent for a future Transaction.
  * TransactionIntent is a prepared transaction statement that is processed in future, but not yet finalized or paid.
  * TransactionIntent is used to realize a Transaction.
+ * If TransactionIntent is set to false via the setValidToFalse() method, it cannot be changed back to true and a new intent must be created.
  */
 @Entity
 public class TransactionIntent {
 	// Required upon creation
 	@Id
 	@GeneratedValue
-	private long id;
+	public long id;
 	
-	private final Money amount;
-	private final Date createdAt;
-	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private final TransferStatus status;
+	public final Money amount;
+	public final Date createdAt;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private final TransactionalEntity beneficiary;	//to
+	public final TransferStatus status;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private final TransactionalEntity source;			//from
+	public final TransactionalEntity beneficiary;	//to
+	
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	public final TransactionalEntity source;			//from
 	
 	// Can be set later
 	private boolean sent;
 	private boolean paid;
-	private Date sentAt;
+	private Date publishedAt;
 	private Date processedAt;
 	private Money fee;
 	private boolean isValid;
+	private boolean allowToSetValid;
 	private String details;
 	private Date transferable;
 
@@ -52,8 +54,14 @@ public class TransactionIntent {
         this.createdAt = new Date();
         this.status = builder.status;
         this.beneficiary = builder.beneficiary;
-        this.source = builder.source;     
+        this.source = builder.source;
+        this.isValid = false;			// this needs to be set true by the TransactionIntentValidator only
+        this.allowToSetValid = true;
     }
+	
+	public boolean isValid() {
+		return this.isValid;
+	}
 	
 	public void setSentTo(boolean sent) {
 		this.sent = sent;
@@ -63,8 +71,8 @@ public class TransactionIntent {
 		this.paid = paid;
 	}
 	
-	public void setSentAt(Date sentAt) {
-		this.sentAt = sentAt;
+	public void setPublishedAt(Date sentAt) {
+		this.publishedAt = sentAt;
 	}
 	
 	public void setPaidAt(Date processedAt) {
@@ -75,8 +83,17 @@ public class TransactionIntent {
 		this.fee = fee;
 	}
 	
-	public void setIsValidTransfer(boolean isValid) {
-		this.isValid = isValid;
+
+	public void setIntentAsValid() {
+		if(this.allowToSetValid) this.isValid = true;
+	}
+	
+	/**
+	 * Attention! If invoked, a TransactionIntent cannot be set back to valid, and a new intent must be created.
+	 */
+	public void setIntentAsNotValid() {
+		this.isValid = false;
+		this.allowToSetValid= false;
 	}
 	
 	/**
@@ -86,6 +103,8 @@ public class TransactionIntent {
 	public void setTransferable(Date transferable) {
 		this.transferable = transferable;
 	}
+	
+	
 
 
 }

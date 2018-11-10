@@ -13,8 +13,9 @@ import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.factories.UserFactory;
-import com.danabijak.demo.banking.model.UserValidationReport;
+import com.danabijak.demo.banking.model.ValidationReport;
 import com.danabijak.demo.banking.repositories.UserRepository;
+import com.danabijak.demo.banking.validators.UserValidatorService;
 
 @Component
 public class UserService {
@@ -32,11 +33,11 @@ public class UserService {
 //	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private ValidatorService uvs;
+	private UserValidatorService uvs;
 
 	
 	public User insertBanking(User user) {
-		UserValidationReport uvr = uvs.validateClientSentUser(user);
+		ValidationReport uvr = uvs.validateClientSentUser(user);
 		if(uvr.valid) {
 			user = userFactory.makeDefaultBankingUser(user);
 			userRepository.save(user);
@@ -48,7 +49,7 @@ public class UserService {
     }
 	
 	public User insertAdmin(User user) {
-		UserValidationReport uvr = uvs.validateClientSentUser(user);
+		ValidationReport uvr = uvs.validateClientSentUser(user);
 		if(uvr.valid) {
 			user = userFactory.makeAdminUser(user);
 			userRepository.save(user);

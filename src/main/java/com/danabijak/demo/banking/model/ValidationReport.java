@@ -6,19 +6,19 @@ import java.util.Optional;
 import com.danabijak.demo.banking.exceptions.ReportException;
 
 // DTO
-public class UserValidationReport {
+public class ValidationReport {
 	public final boolean valid;
 	public final Optional<List<String>> faultDescriptions;
 	
-	public UserValidationReport(boolean valid, Optional<List<String>> faultDescriptions) {
+	public ValidationReport(boolean valid, Optional<List<String>> faultDescriptions) {
 		super();
 		this.valid = valid;
 		this.faultDescriptions = faultDescriptions;
 	}
 	
-	public UserValidationReport(boolean valid) throws ReportException {
+	public ValidationReport(boolean valid) throws ReportException {
 		super();
-		if(!valid) throw new ReportException("Validation reports reporting fault, require details");
+		if(!valid) throw new ReportException("Validation reports that are reporting fault, require descriptions");
 		this.valid = valid;
 		this.faultDescriptions = Optional.empty();
 	}
@@ -26,7 +26,7 @@ public class UserValidationReport {
 	public String generateStringMessage() {
 		String message;
 		if(valid) {
-			message = "User validated";
+			message = "Is Valid";
 		}else {
 			StringBuilder sb = new StringBuilder();
 			for (String s : faultDescriptions.get())

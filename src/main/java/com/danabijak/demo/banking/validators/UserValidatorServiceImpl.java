@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.validators;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,20 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.model.UserValidationReport;
+import com.danabijak.demo.banking.model.ValidationReport;
 import com.danabijak.demo.banking.repositories.UserRepository;
 
 @Component
-public class UserValidatorServiceImpl implements ValidatorService{
+public class UserValidatorServiceImpl implements UserValidatorService{
 	
 	
 	@Autowired
 	private UserRepository userRepository;
 
 	@Override
-	public UserValidationReport validateClientSentUser(User user) {
-		// TODO: Break this method down
-		UserValidationReport report;
+	public ValidationReport validateClientSentUser(User user) {
+		ValidationReport report;
 		boolean isUserValid = true;
 		List<String> faults = new ArrayList<>();
 		
@@ -57,9 +56,9 @@ public class UserValidatorServiceImpl implements ValidatorService{
 		 
 		if(!isUserValid) {
 			Optional<List<String>> faultyParts = Optional.of(faults);
-			report = new UserValidationReport(false, faultyParts);
+			report = new ValidationReport(false, faultyParts);
 		}else 
-			report = new UserValidationReport(true);
+			report = new ValidationReport(true);
 		
 		return report;
 	}

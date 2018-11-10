@@ -24,6 +24,7 @@ import com.danabijak.demo.banking.exceptions.BankAccountException;
  */
 @Entity
 public abstract class TransactionalEntity extends BaseEntity {
+	//TODO: Can limits be changed or should they be final?
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private EntityTransferLimits limits;
@@ -49,4 +50,12 @@ public abstract class TransactionalEntity extends BaseEntity {
 		this.bankAccount = bankAccount;
 	}
 
+
+	public EntityTransferLimits getLimits() {
+		return limits;
+	}
+
+	public String getName() {
+		return name;
+	}
 }
