@@ -1,5 +1,8 @@
 package com.danabijak.demo.banking.services;
 
+
+import org.springframework.stereotype.Component;
+
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.exceptions.TransactionIntentPublishException;
 import com.danabijak.demo.banking.model.TransactionIntentPublishAttemptReport;
@@ -11,6 +14,7 @@ import com.danabijak.demo.banking.model.TransactionIntentPublishAttemptReport;
  * @author kaspar
  *
  */
+@Component
 public interface TransactionIntentService {
 	
 	/**

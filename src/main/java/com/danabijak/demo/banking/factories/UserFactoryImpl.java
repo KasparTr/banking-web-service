@@ -25,6 +25,8 @@ public class UserFactoryImpl implements UserFactory {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	
 
 	/*
 	 * Allows to create a default banking user that gets a bank account attached with default starting balance amount.
@@ -47,6 +49,16 @@ public class UserFactoryImpl implements UserFactory {
 		return user;
 	}
 	
+	@Override
+	public User makeBankEntity(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.BANK)));
+		user.setActive(true);
+		attachBankAccountToUser(user, Balance.DEFAULT_LIMITS.MAX_TOTAL_BALANCE);
+		
+		return user;
+	}
+	
 	private void attachBankAccountToUser(User user, BigDecimal startAmount) {
 		try {
 			BankAccount ba = new BankAccount(BankAccount.DEFAULT_CURRENCY.USD, user.getUsername());
@@ -58,5 +70,7 @@ public class UserFactoryImpl implements UserFactory {
 		
 		
 	}
+
+	
 
 }

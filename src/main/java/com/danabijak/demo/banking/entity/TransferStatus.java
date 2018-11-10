@@ -3,7 +3,7 @@ package com.danabijak.demo.banking.entity;
 public class TransferStatus {	
 	
 	public enum  TRANSFER_STATUS{
-		OK(101), PENDING(201), FAIL(303), CANCEL(303);
+		CREATED(010), OK(101), PENDING(201), FAIL(303), CANCEL(303);
 
 	    private int numVal;
 

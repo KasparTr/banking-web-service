@@ -26,6 +26,12 @@ public class Transaction {
 		this.beneficiary = beneficiary;
 		this.source = source;
 		this.details = details;
-		
     }
+	
+	public String toString() {
+		return "Transaction{" + "amount=" + amount.toString()+ ", beneficiary=" + beneficiary.getName() + 
+				", source=" + source.getName() + 
+				", details=" + details + '}';
+
+	}
 }

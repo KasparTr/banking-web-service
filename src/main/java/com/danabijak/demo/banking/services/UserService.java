@@ -58,7 +58,18 @@ public class UserService {
 		}
 		else
 			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
-
+    }
+	
+	public User insertBankEntity(User user) {
+		ValidationReport uvr = uvs.validateClientSentUser(user);
+		if(uvr.valid) {
+			user = userFactory.makeBankEntity(user);
+			userRepository.save(user);
+			log.info("New Bank was created: " + user.getId());
+			return user;
+		}
+		else
+			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
     }
 	
 	public User find(long id) {
@@ -68,6 +79,15 @@ public class UserService {
 			return user.get();
 		else 
 			throw new UserNotFoundException(String.format("User with ID %s not found", id));
+    }
+	
+	public User findByUsername(String username) {
+		Optional<User> user = userRepository.findByUsername(username);
+		
+		if(user.isPresent())
+			return user.get();
+		else 
+			throw new UserNotFoundException(String.format("User with username %s not found", username));
     }
 	
 	public List<User> getAll() {

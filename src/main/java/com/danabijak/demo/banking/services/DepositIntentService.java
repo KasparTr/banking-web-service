@@ -25,9 +25,8 @@ public class DepositIntentService extends TransactionIntentServiceImpl{
 			intent.beneficiary.getLimits().decreaseAllowedDeposit(intent.amount.getAmount());
 			
 			// TODO: Replace handover to TransactionService with a publishing to a TransactionIntentPool
-			// NB! beneficiary balance is increased only by the TransactionService
 			TransactionService depositService = new DepositService();
-			depositService.porcessTransactionIntent(intent);
+			depositService.porcess(intent);
 		}
 	}
 

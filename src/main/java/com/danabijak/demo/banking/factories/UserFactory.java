@@ -16,4 +16,9 @@ public interface UserFactory {
 	 */
 	public User makeAdminUser(User user);
 	
+	/*
+	 * Changes (makes) the user into a valid admin user
+	 */
+	public User makeBankEntity(User user);
+	
 }

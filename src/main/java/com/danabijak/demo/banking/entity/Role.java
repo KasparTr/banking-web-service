@@ -21,7 +21,7 @@ import lombok.ToString;
 public class Role extends BaseEntity{
 	
 	public enum NAME {
-	    USER, ACTUATOR, ADMIN
+	    USER, ACTUATOR, ADMIN, BANK
 	} 
 
     private NAME name;

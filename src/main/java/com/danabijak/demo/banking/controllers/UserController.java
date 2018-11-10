@@ -50,8 +50,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		User savedUser = userService.insertBanking(user);
+		
 		
 		URI location = ServletUriComponentsBuilder
 			.fromCurrentRequest()
