@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.factories;
+package com.danabijak.demo.banking.users.factories;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -14,8 +14,8 @@ import com.danabijak.demo.banking.entity.Balance;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.exceptions.BankAccountException;
-import com.danabijak.demo.banking.services.UserService;
+import com.danabijak.demo.banking.transactions.exceptions.BankAccountException;
+import com.danabijak.demo.banking.users.services.UserService;
 
 @Component
 public class UserFactoryImpl implements UserFactory {
@@ -65,8 +65,6 @@ public class UserFactoryImpl implements UserFactory {
 	private void attachBankAccountToUser(User user, BigDecimal startAmount) {
 		try {
 			BankAccount ba = new BankAccount(BankAccount.DEFAULT_CURRENCY.USD, user.getUsername());
-			System.out.println("#### UserFactory | Attaching Bank Account to user: " + user.getUsername());
-			System.out.println("#### UserFactory | Attached Bank Account ID: " + ba.getId());
 			ba.getBalance().setTotalAmount(startAmount);
 			user.attachBankAccount(ba);
 		}catch(Exception e) {

@@ -12,11 +12,12 @@ import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionalEntity;
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.exceptions.TransactionNotFoundException;
-import com.danabijak.demo.banking.exceptions.TransactionServiceException;
-import com.danabijak.demo.banking.exceptions.UserNotFoundException;
-import com.danabijak.demo.banking.repositories.TransactionIntentRepository;
-import com.danabijak.demo.banking.repositories.TransactionRepository;
+import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
+import com.danabijak.demo.banking.infra.repositories.TransactionRepository;
+import com.danabijak.demo.banking.transactions.exceptions.TransactionNotFoundException;
+import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
+import com.danabijak.demo.banking.transactions.model.AccountTransactions;
+import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 
 @Component
 public class TransactionServiceImpl implements TransactionService{
@@ -29,24 +30,17 @@ public class TransactionServiceImpl implements TransactionService{
 		try {
 			System.out.println("TransactionServiceImpl | process() | processing...");
 			if(intent.isValid()) {
-				System.out.println("TransactionServiceImpl | process() | intent is Valid");
 				
 				intent.source.getBankAccount().getBalance().decreaseTotal(intent.amount);
-				
-				System.out.println("TransactionServiceImpl | process() | 1");
 				intent.beneficiary.getBankAccount().getBalance().increaseTotal(intent.amount);
 				
-				System.out.println("TransactionServiceImpl | process() | 2");
 				Transaction transaction = new Transaction(
 						intent.amount, 
 						intent.beneficiary.getBankAccount(), 
 						intent.source.getBankAccount(), 
 						"Successfully made transaction");
 				
-				System.out.println("TransactionServiceImpl | process() | transactionRepo: " + transactionRepo);
 				transactionRepo.save(transaction);
-				
-				System.out.println("TransactionServiceImpl | process() | transaction saved: " + transaction.toString());
 				return transaction;
 			}else {
 				throw new TransactionServiceException("Transaction intent is not valid. Transaction not made!");
@@ -57,6 +51,14 @@ public class TransactionServiceImpl implements TransactionService{
 		}
 		
 	}
+	
+	public AccountTransactions getTransactionsOf(BankAccount account) throws TransactionServiceException {
+		return new AccountTransactions(
+				getDebitTransactionsOf(account),
+				getCreditTransactionsOf(account));
+	}
+	
+	
 	
 	@Override
 	public List<Transaction> getDebitTransactionsOf(BankAccount account) throws TransactionNotFoundException {
@@ -70,11 +72,8 @@ public class TransactionServiceImpl implements TransactionService{
 				accountTransactions.add(trans);
 			}
 		}
-		
-		if(accountTransactions.isEmpty())
-			throw new TransactionNotFoundException(String.format("No debit transaction found")); 
-		else 
-			return accountTransactions;
+
+		return accountTransactions;
 	}
 	
 	@Override
@@ -90,10 +89,7 @@ public class TransactionServiceImpl implements TransactionService{
 			}
 		}
 		
-		if(accountTransactions.isEmpty())
-			throw new TransactionNotFoundException(String.format("No credit transaction found")); 
-		else 
-			return accountTransactions;
+		return accountTransactions;
 	}
 
 	@Override
@@ -106,6 +102,8 @@ public class TransactionServiceImpl implements TransactionService{
 			throw new TransactionNotFoundException(String.format("Transaction with ID %s not found", id));
 
 	}
+
+
 	
 	
 

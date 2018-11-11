@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.danabijak.demo.banking.entity.Balance;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.User;
+import com.danabijak.demo.banking.users.factories.UserFactoryImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

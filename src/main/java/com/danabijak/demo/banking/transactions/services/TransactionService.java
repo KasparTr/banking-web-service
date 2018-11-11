@@ -9,7 +9,8 @@ import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionalEntity;
-import com.danabijak.demo.banking.exceptions.TransactionServiceException;
+import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
+import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 
 @Component
 public interface TransactionService {
@@ -18,6 +19,8 @@ public interface TransactionService {
 	
 	public List<Transaction> getDebitTransactionsOf(BankAccount account) throws TransactionServiceException;
 	public List<Transaction> getCreditTransactionsOf(BankAccount account) throws TransactionServiceException;
+	
+	public AccountTransactions getTransactionsOf(BankAccount account) throws TransactionServiceException;
 	
 	public Transaction findTransactionBy(long id) throws TransactionServiceException;
 

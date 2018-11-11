@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import org.joda.money.Money;
 
-import com.danabijak.demo.banking.model.TransactionIntentBuilder;
+import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 
 /**
  * TransactionIntent is an intent for a future Transaction.

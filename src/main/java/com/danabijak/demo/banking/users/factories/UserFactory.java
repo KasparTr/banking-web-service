@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.factories;
+package com.danabijak.demo.banking.users.factories;
 
 import org.springframework.stereotype.Component;
 

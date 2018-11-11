@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.exceptions.TransactionIntentPublishException;
-import com.danabijak.demo.banking.model.ValidationReport;
-import com.danabijak.demo.banking.repositories.TransactionIntentRepository;
-import com.danabijak.demo.banking.repositories.UserRepository;
+import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
+import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
+import com.danabijak.demo.banking.transactions.model.ValidationReport;
 
 @Component
 public abstract class TransactionIntentServiceImpl implements TransactionIntentService{
@@ -25,7 +25,7 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 			reserverParticipantsBalance(intent);
 			return publish(intent);
 		}else {
-			throw new TransactionIntentPublishException("Intent is Not Valid");
+			throw new TransactionIntentPublishException("Transaction intent not publised. Errors: " + validationReport.generateStringMessage());
 		}
 	}
 	
@@ -37,7 +37,7 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 	 */
 	protected TransactionIntent publish(TransactionIntent intent) {
 		// TODO: Implement publishing to PUB/SUB channel. 
-		// NB! if that fails keep in mind to restore booked amount!
+		// NB! if that fails keep in mind to undo reserver balance/limits!
 
 		return intent;
 	}

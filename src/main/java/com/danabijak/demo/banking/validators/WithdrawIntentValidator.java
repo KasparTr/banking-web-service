@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.danabijak.demo.banking.entity.Balance;
 import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.model.ValidationReport;
+import com.danabijak.demo.banking.transactions.model.ValidationReport;
 
 public class WithdrawIntentValidator extends TransactionIntentValidatorImpl {
 

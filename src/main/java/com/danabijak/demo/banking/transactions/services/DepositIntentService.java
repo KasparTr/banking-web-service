@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.model.ValidationReport;
+import com.danabijak.demo.banking.transactions.model.ValidationReport;
 import com.danabijak.demo.banking.validators.DepositIntentValidator;
 import com.danabijak.demo.banking.validators.TransactionIntentValidator;
 

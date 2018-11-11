@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.users.services;
 
 import java.util.stream.Collectors;
 
@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.danabijak.demo.banking.repositories.UserRepository;
+import com.danabijak.demo.banking.infra.repositories.UserRepository;
 
 @Service
 public class BankUserDetailsService implements UserDetailsService {

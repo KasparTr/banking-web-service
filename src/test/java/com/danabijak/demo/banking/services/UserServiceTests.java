@@ -23,10 +23,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.exceptions.UserNotFoundException;
-import com.danabijak.demo.banking.exceptions.UserObjectNotValidException;
-import com.danabijak.demo.banking.repositories.UserRepository;
-import com.danabijak.demo.banking.services.UserService;
+import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
+import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
+import com.danabijak.demo.banking.users.services.UserService;
 import com.danabijak.demo.banking.entity.Role;
 
 @RunWith(SpringRunner.class)

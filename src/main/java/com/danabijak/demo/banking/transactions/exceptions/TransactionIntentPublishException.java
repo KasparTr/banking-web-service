@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.exceptions;
+package com.danabijak.demo.banking.transactions.exceptions;
 
 // TODO: Break this into 
 // - intent publish exception

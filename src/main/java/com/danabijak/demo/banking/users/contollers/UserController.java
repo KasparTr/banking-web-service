@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.controllers;
+package com.danabijak.demo.banking.users.contollers;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,14 +27,15 @@ import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.exceptions.UserNotFoundException;
-import com.danabijak.demo.banking.exceptions.UserSavingException;
-import com.danabijak.demo.banking.repositories.UserRepository;
-import com.danabijak.demo.banking.services.UserService;
+import com.danabijak.demo.banking.infra.repositories.UserRepository;
 import com.danabijak.demo.banking.transactions.http.AccountBalanceResponse;
 import com.danabijak.demo.banking.transactions.http.BankAccountStatementClientResponse;
+import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 import com.danabijak.demo.banking.transactions.services.TransactionService;
+import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
+import com.danabijak.demo.banking.users.exceptions.UserSavingException;
 import com.danabijak.demo.banking.users.factories.BankAccountStatementFactory;
+import com.danabijak.demo.banking.users.services.UserService;
 
 @RestController
 public class UserController {
@@ -62,8 +63,8 @@ public class UserController {
 		return ResponseEntity.ok(userService.find(id));
 	}
 	
-	@GetMapping("/services/users/{id}/account/balance")
-	public ResponseEntity<AccountBalanceResponse> getAccountBalance(@PathVariable long id){
+	@GetMapping("/services/users/{id}/account/{accountId}/balance")
+	public ResponseEntity<AccountBalanceResponse> getAccountBalance(@PathVariable long id, @PathVariable long accountId){
 		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
 		User user = userService.find(id);
 		
@@ -77,14 +78,15 @@ public class UserController {
 	public ResponseEntity<BankAccountStatementClientResponse> getAccountStatement(@PathVariable long id, @PathVariable long accountId){
 		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
 		User user = userService.find(id);		
+		
 		// find account. Since currency user only has 1 account a search here is not required.
 		// this account would be used to search for transactions with the transactionService in the future
 		BankAccount correctAccount = user.getBankAccount();
 		
-		List<Transaction> dTransactions = transactionService.getDebitTransactionsOf(correctAccount);
-		List<Transaction> cTransactions = transactionService.getCreditTransactionsOf(correctAccount);
-		
-		BankAccountStatementClientResponse statement = baStatementFactory.generateStatement(user, correctAccount.getId(), cTransactions, dTransactions);
+		BankAccountStatementClientResponse statement = baStatementFactory.generateStatement(
+				user, 
+				correctAccount.getId(), 
+				transactionService.getTransactionsOf(correctAccount));
 
 		return ResponseEntity.ok(statement);
 	}

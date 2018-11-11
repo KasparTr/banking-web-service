@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.users.services;
 
 import java.util.Arrays;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.repositories.UserRepository;
+import com.danabijak.demo.banking.infra.repositories.UserRepository;
 
 @Component
 public class UserServiceCommandlineRunner implements CommandLineRunner{
@@ -24,6 +24,7 @@ public class UserServiceCommandlineRunner implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		createAdminUser();
+		createBankEntity();
 	}
 	
 	private void createAdminUser() {
@@ -33,6 +34,17 @@ public class UserServiceCommandlineRunner implements CommandLineRunner{
 		              "admin123@ASDF"));
 		}catch(Exception e) {
 			log.error("Default Admin User not created: " + e.getMessage());
+		}
+		
+	}
+	
+	private void createBankEntity() {
+		try {
+			userService.insertBankEntity(new User(
+		              "bankItself@bank.com",
+		              "bankItSElf123@sad"));
+		}catch(Exception e) {
+			log.error("Bank User not created: " + e.getMessage());
 		}
 		
 	}

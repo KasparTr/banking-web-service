@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.model.ValidationReport;
+import com.danabijak.demo.banking.transactions.model.ValidationReport;
 
 public abstract class TransactionIntentValidatorImpl implements TransactionIntentValidator {
 
@@ -18,13 +18,13 @@ public abstract class TransactionIntentValidatorImpl implements TransactionInten
 		
 		if(!entityTransactionLimitsAllowFor(intent)) {
 			isValid=false;
-			faults.add("Allowed max limit is less than transaction intent amount");
+			faults.add("Transaction limit reached.");
 		}
 		
 		// TODO: FOr better error messaging implement messaged Exceptions here.
 		if(!entityBalanceAllowsFor(intent)) {
 			isValid=false;
-			faults.add("Entity balance doesnt allow for this intent");
+			faults.add("Balance limit reached.");
 		}
 			
 		

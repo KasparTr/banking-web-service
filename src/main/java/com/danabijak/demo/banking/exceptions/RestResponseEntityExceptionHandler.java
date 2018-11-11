@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
+import com.danabijak.demo.banking.users.exceptions.UserSavingException;
+
 @ControllerAdvice
 @RestController
 //TODO: Evaluate what goes to exception details for security purposes.

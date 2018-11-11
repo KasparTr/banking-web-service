@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.exceptions;
+package com.danabijak.demo.banking.users.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

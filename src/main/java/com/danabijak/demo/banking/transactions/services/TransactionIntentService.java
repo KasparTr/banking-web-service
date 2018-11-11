@@ -4,7 +4,7 @@ package com.danabijak.demo.banking.transactions.services;
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.exceptions.TransactionIntentPublishException;
+import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 
 /**

@@ -16,8 +16,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.model.ValidationReport;
-import com.danabijak.demo.banking.repositories.UserRepository;
+import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.transactions.model.ValidationReport;
 import com.danabijak.demo.banking.validators.UserValidatorServiceImpl;
 
 public class UserValidatorServiceTests {

@@ -12,16 +12,16 @@ import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.model.DepositClientRequest;
-import com.danabijak.demo.banking.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.services.UserService;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientRequest;
+import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;
+import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
+import com.danabijak.demo.banking.users.services.UserService;
 
 @Component
 public class TransactionIntentFactory {
 	
 
-	public TransactionIntent createDepositRequest(User source, User beneficiary, DepositClientRequest request) {
+	public TransactionIntent create(User source, User beneficiary, TransactionClientRequest request) {
 
 		BigDecimal amountOfMoney = request.money.amount;
 		Currency currency = request.money.currency;
@@ -30,7 +30,7 @@ public class TransactionIntentFactory {
 
 		
 		return new TransactionIntentBuilder()
-				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Fresh from factory"))
+				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
 				.beneficiary(beneficiary)
 				.source(source)
 				.amount(money)

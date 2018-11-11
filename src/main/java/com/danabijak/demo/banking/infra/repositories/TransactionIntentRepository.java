@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.repositories;
+package com.danabijak.demo.banking.infra.repositories;
 
 import java.util.Optional;
 

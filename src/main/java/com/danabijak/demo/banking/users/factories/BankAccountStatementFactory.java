@@ -9,6 +9,7 @@ import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionalEntity;
 import com.danabijak.demo.banking.transactions.http.BankAccountStatementClientResponse;
 import com.danabijak.demo.banking.transactions.http.TransactionClientResponse;
+import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 
 @Component
 public class BankAccountStatementFactory {
@@ -16,18 +17,17 @@ public class BankAccountStatementFactory {
 	public BankAccountStatementClientResponse generateStatement(
 			TransactionalEntity entity, 
 			long accountId,
-			List<Transaction> cTransactions, 
-			List<Transaction> dTransactions) {
+			AccountTransactions transactions) {
 		
 		List<TransactionClientResponse> transClientResponses = new ArrayList<>();		
 		
-		for(Transaction trans:cTransactions) {
+		for(Transaction trans:transactions.creditTransactions) {
 			transClientResponses.add(new TransactionClientResponse(
 					TransactionClientResponse.TRANSACTION_TYPE.CREDIT,
 					trans));
 		}
 		
-		for(Transaction trans:dTransactions) {
+		for(Transaction trans:transactions.debitTransactions) {
 			transClientResponses.add(new TransactionClientResponse(
 					TransactionClientResponse.TRANSACTION_TYPE.DEBIT,
 					trans));

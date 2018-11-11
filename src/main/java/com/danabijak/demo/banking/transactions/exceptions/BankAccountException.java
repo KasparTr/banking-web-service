@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.exceptions;
+package com.danabijak.demo.banking.transactions.exceptions;
 
 public class BankAccountException extends RuntimeException {
 	public BankAccountException(String message) {

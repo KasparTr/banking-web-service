@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
-import com.danabijak.demo.banking.exceptions.BalanceOperationException;
+import com.danabijak.demo.banking.transactions.exceptions.BalanceOperationException;
 
 @Entity
 public class Balance {

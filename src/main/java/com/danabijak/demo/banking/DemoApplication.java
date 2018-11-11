@@ -16,8 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.repositories.UserRepository;
-import com.danabijak.demo.banking.services.UserService;
+import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.users.services.UserService;
 
 @SpringBootApplication
 public class DemoApplication {

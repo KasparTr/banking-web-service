@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.model;
+package com.danabijak.demo.banking.transactions.model;
 
 import java.util.Date;
 

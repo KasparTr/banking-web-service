@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.controllers;
+package com.danabijak.demo.banking.transactions.controllers;
 
 import java.net.URI;
 import java.util.List;
@@ -18,14 +18,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.model.DepositClientRequest;
-import com.danabijak.demo.banking.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.services.UserService;
 import com.danabijak.demo.banking.transactions.factories.TransactionIntentFactory;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientRequest;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
+import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;
+import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.services.TransactionIntentService;
 import com.danabijak.demo.banking.transactions.services.TransactionService;
+import com.danabijak.demo.banking.users.services.UserService;
 
 @RestController
 public class TransactionController {
@@ -52,48 +52,46 @@ public class TransactionController {
 		return transactionService.findTransactionBy(id);
 	}
 	
+	
+	//TODO: Enable multiple account support
 	@PostMapping("/services/transactions/deposit")
-	public ResponseEntity<TransactionIntentClientResponse> deposit(@Valid @RequestBody DepositClientRequest request) {
+	public ResponseEntity<TransactionIntentClientResponse> deposit(@Valid @RequestBody TransactionClientRequest request) {
 		TransactionIntentFactory factory = new TransactionIntentFactory();
-		
 		
 		User bank = userService.findByUsername("bankItself@bank.com");
-		User beneficiary = userService.find(request.depositor.id);
+		User user = userService.find(request.entity.id);
 	
-		TransactionIntent intent = factory.createDepositRequest(bank, beneficiary, request);
-		System.out.println("TransactionController | depositTo() | intent created: " + intent.toString());
-		
-
+		TransactionIntent intent = factory.create(bank, user, request);		
 		TransactionIntent publishedIntent = depositIntentService.attemptPublish(intent);
 		
-		System.out.println("TransactionController | depositTo() | intent published: " + publishedIntent.toString());
-
 		// should be end of it, but right now instead of PUB/SUB we send directly to:
 		// transactionService.processDeposit(intent)
-		System.out.println("TransactionController | depositTo() | transactionService: " + transactionService);
 		transactionService.porcess(publishedIntent);
-		System.out.println("TransactionController | depositTo() | intent processed");
-
 		
 		TransactionIntentClientResponse response = new TransactionIntentClientResponse(publishedIntent.isValid(), "Intent Published", publishedIntent);
 		return ResponseEntity.ok(response);
-		
-	}	
+	}
 	
-	// TODO: NOT FINISHED
-	@PostMapping("/services/transactions/intent")
-	public ResponseEntity<TransactionIntentClientResponse> createIntent(@Valid @RequestBody TransactionIntentClientRequest request) {
+	//TODO: Enable multiple account support
+	@PostMapping("/services/transactions/withdraw")
+	public ResponseEntity<TransactionIntentClientResponse> withdraw(@Valid @RequestBody TransactionClientRequest request) {
 		TransactionIntentFactory factory = new TransactionIntentFactory();
 		
-		User source = userService.find(request.source.id);
-		User beneficiary = userService.find(request.beneficiary.id);
-		TransactionIntent intent = factory.createFromClientRequest(source, beneficiary, request);
-		TransactionIntent publishedIntent =  withdrawIntentService.attemptPublish(intent);
+		User bank = userService.findByUsername("bankItself@bank.com");
+		User user = userService.find(request.entity.id);
+	
 		
+		TransactionIntent intent = factory.create(user, bank, request);		
+		TransactionIntent publishedIntent = withdrawIntentService.attemptPublish(intent);
+		
+		// should be end of it, but right now instead of PUB/SUB we send directly to:
+		// transactionService.processDeposit(intent)
+		transactionService.porcess(publishedIntent);
 		
 		TransactionIntentClientResponse response = new TransactionIntentClientResponse(publishedIntent.isValid(), "Intent Published", publishedIntent);
 		return ResponseEntity.ok(response);
 		
 	}	
+
 }
 
