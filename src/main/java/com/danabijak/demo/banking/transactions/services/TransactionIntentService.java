@@ -1,11 +1,11 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.transactions.services;
 
 
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.exceptions.TransactionIntentPublishException;
-import com.danabijak.demo.banking.model.TransactionIntentPublishAttemptReport;
+import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 
 /**
  * TransactionIntentService is a service that publishes transaction intents into a message channel (using PUB/SUB or other).
@@ -23,5 +23,5 @@ public interface TransactionIntentService {
 	 * @return - Report describes the publishing status of the intent.
 	 * @throws TransactionIntentPublishException - if something goes horribly wrong here.
 	 */
-	public TransactionIntentPublishAttemptReport attemptToPublishIntent(TransactionIntent intent) throws TransactionIntentPublishException;
+	public TransactionIntent attemptPublish(TransactionIntent intent) throws TransactionIntentPublishException;
 }

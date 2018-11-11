@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.transactions.services;
 
 import javax.annotation.Resource;
 
@@ -18,20 +18,10 @@ public class WithdrawIntentService extends TransactionIntentServiceImpl{
 		TransactionIntentValidator validator = new WithdrawIntentValidator();
 		return validator.validate(intent);
 	}
-
-	/**
-	 * NB! Publishing intents to messaging channel is not implement yet.
-	 * TOOD: Instead of directly sending intent to TransactionSerice for processing, publish the intent to the intent pool and 
-	 * 	have the TransactionService (as a subscriber) process the intents.
-	 */
+	
 	@Override
-	protected void publishIntent(TransactionIntent intent) {
-		// TODO: HANDLE LOGIC HOW WITHDRAWAL INTENTS ARE PUBLISHED
+	protected void reserverParticipantsBalance(TransactionIntent intent) {
 		// transfer.source.currentMaxWithdraw -= transfer.amount
-		// ...
-		
-		
-		// 
 	}
 
 }

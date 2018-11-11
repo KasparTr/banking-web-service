@@ -22,12 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.hateoas.*;
+
+import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Role;
+import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.exceptions.UserSavingException;
 import com.danabijak.demo.banking.repositories.UserRepository;
 import com.danabijak.demo.banking.services.UserService;
+import com.danabijak.demo.banking.transactions.http.AccountBalanceResponse;
+import com.danabijak.demo.banking.transactions.http.BankAccountStatementClientResponse;
+import com.danabijak.demo.banking.transactions.services.TransactionService;
+import com.danabijak.demo.banking.users.factories.BankAccountStatementFactory;
 
 @RestController
 public class UserController {
@@ -38,6 +45,12 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private TransactionService transactionService;
+	
+	@Autowired
+	private BankAccountStatementFactory baStatementFactory;
+	
 	
 	@GetMapping("/services/users")
 	public ResponseEntity<List<User> > getAllUsers(){
@@ -47,6 +60,33 @@ public class UserController {
 	@GetMapping("/services/users/{id}")
 	public ResponseEntity<User> findById(@PathVariable long id){
 		return ResponseEntity.ok(userService.find(id));
+	}
+	
+	@GetMapping("/services/users/{id}/account/balance")
+	public ResponseEntity<AccountBalanceResponse> getAccountBalance(@PathVariable long id){
+		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
+		User user = userService.find(id);
+		
+		// find account. Since currency user only has 1 account a search here is not required.
+		BankAccount correctAccount = user.getBankAccount();
+
+		return ResponseEntity.ok(new AccountBalanceResponse(correctAccount));
+	}
+	
+	@GetMapping("/services/users/{id}/account/{accountId}/statement")
+	public ResponseEntity<BankAccountStatementClientResponse> getAccountStatement(@PathVariable long id, @PathVariable long accountId){
+		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
+		User user = userService.find(id);		
+		// find account. Since currency user only has 1 account a search here is not required.
+		// this account would be used to search for transactions with the transactionService in the future
+		BankAccount correctAccount = user.getBankAccount();
+		
+		List<Transaction> dTransactions = transactionService.getDebitTransactionsOf(correctAccount);
+		List<Transaction> cTransactions = transactionService.getCreditTransactionsOf(correctAccount);
+		
+		BankAccountStatementClientResponse statement = baStatementFactory.generateStatement(user, correctAccount.getId(), cTransactions, dTransactions);
+
+		return ResponseEntity.ok(statement);
 	}
 	
 	@PostMapping("/register")

@@ -36,6 +36,7 @@ public class UserFactoryImpl implements UserFactory {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR)));
 		user.setActive(true);
+		user.setName(user.getUsername());
 		attachBankAccountToUser(user, Balance.DEFAULT_LIMITS.BANKING_USER_START_BALANCE);
 		
 		return user;
@@ -46,6 +47,7 @@ public class UserFactoryImpl implements UserFactory {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.ADMIN)));
 		user.setActive(true);
+		user.setName(user.getUsername());
 		return user;
 	}
 	
@@ -54,6 +56,7 @@ public class UserFactoryImpl implements UserFactory {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRoles(Arrays.asList(new Role(Role.NAME.USER), new Role(Role.NAME.ACTUATOR), new Role(Role.NAME.BANK)));
 		user.setActive(true);
+		user.setName(user.getUsername());
 		attachBankAccountToUser(user, Balance.DEFAULT_LIMITS.MAX_TOTAL_BALANCE);
 		
 		return user;
@@ -62,6 +65,8 @@ public class UserFactoryImpl implements UserFactory {
 	private void attachBankAccountToUser(User user, BigDecimal startAmount) {
 		try {
 			BankAccount ba = new BankAccount(BankAccount.DEFAULT_CURRENCY.USD, user.getUsername());
+			System.out.println("#### UserFactory | Attaching Bank Account to user: " + user.getUsername());
+			System.out.println("#### UserFactory | Attached Bank Account ID: " + ba.getId());
 			ba.getBalance().setTotalAmount(startAmount);
 			user.attachBankAccount(ba);
 		}catch(Exception e) {

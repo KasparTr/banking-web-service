@@ -14,8 +14,8 @@ import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.model.DepositClientRequest;
 import com.danabijak.demo.banking.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.model.TransactionIntentClientRequest;
 import com.danabijak.demo.banking.services.UserService;
+import com.danabijak.demo.banking.transactions.http.TransactionIntentClientRequest;
 
 @Component
 public class TransactionIntentFactory {

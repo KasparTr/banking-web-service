@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.model;
+package com.danabijak.demo.banking.transactions.http;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -6,9 +6,9 @@ import java.util.Date;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.users.http.responses.TransactionalEntityClientR;
+import com.danabijak.demo.banking.users.http.TransactionalEntityClientR;
 
-public class TransactionIntentPublishAttemptReport {
+public class TransactionIntentClientResponse {
 	public final long id;
 	public final BigDecimal amount;
 	public final String currency;
@@ -20,15 +20,20 @@ public class TransactionIntentPublishAttemptReport {
 	public final boolean isValid;
 	
 
-	public TransactionIntentPublishAttemptReport(boolean b, String details, TransactionIntent intent) {
+	public TransactionIntentClientResponse(boolean b, String details, TransactionIntent intent) {
 		this.id = intent.id;
 		this.amount = intent.amount.getAmount();
 		this.currency = intent.amount.getCurrencyUnit().toString();
 		this.createdAt = intent.createdAt;
 		this.status = intent.status.status;
 		
-		this.beneficiary = new TransactionalEntityClientR(intent.beneficiary.getId(), intent.beneficiary.getName());
-		this.source = new TransactionalEntityClientR(intent.source.getId(), intent.source.getName());
+		this.beneficiary = new TransactionalEntityClientR(
+				intent.beneficiary.getId(), 
+				intent.beneficiary.getName());
+		
+		this.source = new TransactionalEntityClientR(
+				intent.source.getId(), 
+				intent.source.getName());
 		this.details = details;
 		this.isValid = intent.isValid();
 	}

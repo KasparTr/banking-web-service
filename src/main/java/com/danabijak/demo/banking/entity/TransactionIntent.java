@@ -111,6 +111,10 @@ public class TransactionIntent {
 		this.transferable = transferable;
 	}
 	
+	public String toString() {
+		return "source: " + this.source.getName() + ", " + "beneficiary: " + this.beneficiary.getName() + ", " + "isValid: " + this.isValid;
+	}
+	
 	
 
 
