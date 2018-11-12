@@ -2,10 +2,12 @@ package com.danabijak.demo.banking.users.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -35,14 +37,13 @@ public class UserService {
 	@Autowired
 	private UserValidatorService uvs;
 
-	
 	public User insertBanking(User user) {
 		ValidationReport uvr = uvs.validateClientSentUser(user);
 		if(uvr.valid) {
 			user = userFactory.makeDefaultBankingUser(user);
-			userRepository.save(user);
-			log.info("New User was created: " + user.getId());
-			return user;
+			User savedUser = userRepository.save(user);
+			log.info("New User was created: " + savedUser.getId());
+			return savedUser;
 		}
 		else
 			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
@@ -72,24 +73,27 @@ public class UserService {
 			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
     }
 	
-	public User find(long id) {
+	@Async("asyncExecutor")
+	public CompletableFuture<User> find(long id) {
 		Optional<User> user = userRepository.findById(id);
 		
 		if(user.isPresent())
-			return user.get();
+			return CompletableFuture.completedFuture(user.get());
 		else 
 			throw new UserNotFoundException(String.format("User with ID %s not found", id));
     }
 	
-	public User findByUsername(String username) {
+	@Async("asyncExecutor")
+	public CompletableFuture<User> findByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
 		
 		if(user.isPresent())
-			return user.get();
+			return CompletableFuture.completedFuture(user.get());
 		else 
 			throw new UserNotFoundException(String.format("User with username %s not found", username));
     }
 	
+	@Async("asyncExecutor")
 	public List<User> getAll() {
 		List<User> users = userRepository.findAll();
 

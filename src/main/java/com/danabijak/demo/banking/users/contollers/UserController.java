@@ -7,6 +7,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import javax.validation.Valid;
 
@@ -14,6 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +32,18 @@ import org.springframework.hateoas.*;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.Transaction;
+import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
 import com.danabijak.demo.banking.transactions.http.AccountBalanceResponse;
 import com.danabijak.demo.banking.transactions.http.BankAccountStatementClientResponse;
+import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 import com.danabijak.demo.banking.transactions.services.TransactionService;
 import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.exceptions.UserSavingException;
 import com.danabijak.demo.banking.users.factories.BankAccountStatementFactory;
+import com.danabijak.demo.banking.users.http.UserClientResponse;
 import com.danabijak.demo.banking.users.services.UserService;
 
 @RestController
@@ -53,89 +62,44 @@ public class UserController {
 	private BankAccountStatementFactory baStatementFactory;
 	
 	
-	@GetMapping("/services/users")
-	public ResponseEntity<List<User> > getAllUsers(){
-		return ResponseEntity.ok(userService.getAll());
-	}
-	
-	@GetMapping("/services/users/{id}")
-	public ResponseEntity<User> findById(@PathVariable long id){
-		return ResponseEntity.ok(userService.find(id));
-	}
-	
 	@GetMapping("/services/users/{id}/account/{accountId}/balance")
-	public ResponseEntity<AccountBalanceResponse> getAccountBalance(@PathVariable long id, @PathVariable long accountId){
-		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
-		User user = userService.find(id);
+	public CompletableFuture<ResponseEntity<AccountBalanceResponse>> getAccountBalance(@PathVariable long id, @PathVariable long accountId){
+		// TODO: IMPLEMENT CHECK FOR TOKEN VS USER ID!!
+		CompletableFuture<User> userFuture = userService.find(id);
 		
-		// find account. Since currency user only has 1 account a search here is not required.
-		BankAccount correctAccount = user.getBankAccount();
+		return userFuture.thenApply(user -> {
+			// find account. Since currency user only has 1 account a search here is not required.
+			BankAccount correctAccount = user.getBankAccount();
 
-		return ResponseEntity.ok(new AccountBalanceResponse(correctAccount));
+			return ResponseEntity.ok(new AccountBalanceResponse(correctAccount));
+		});
+		
 	}
 	
 	@GetMapping("/services/users/{id}/account/{accountId}/statement")
-	public ResponseEntity<BankAccountStatementClientResponse> getAccountStatement(@PathVariable long id, @PathVariable long accountId){
+	public CompletableFuture<ResponseEntity<BankAccountStatementClientResponse>> getAccountStatement(@PathVariable long id, @PathVariable long accountId){
 		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
-		User user = userService.find(id);		
+		CompletableFuture<User> userFuture = userService.find(id);
 		
-		// find account. Since currency user only has 1 account a search here is not required.
-		// this account would be used to search for transactions with the transactionService in the future
-		BankAccount correctAccount = user.getBankAccount();
-		
-		BankAccountStatementClientResponse statement = baStatementFactory.generateStatement(
-				user, 
-				correctAccount.getId(), 
-				transactionService.getTransactionsOf(correctAccount));
+		return userFuture.thenApply(user -> {
+			// find account. Since currency user only has 1 account a search here is not required.
+			// this account would be used to search for transactions with the transactionService in the future
+			BankAccount correctAccount = user.getBankAccount();
+			
+			BankAccountStatementClientResponse statement = baStatementFactory.generateStatement(
+					user, 
+					correctAccount.getId(), 
+					transactionService.getTransactionsOf(correctAccount));
 
-		return ResponseEntity.ok(statement);
+			return ResponseEntity.ok(statement);
+		});
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+	public ResponseEntity<UserClientResponse> createUser(@Valid @RequestBody User user) {
 		User savedUser = userService.insertBanking(user);
-		
-		return ResponseEntity.ok(savedUser);
-		
-		
-//		URI location = ServletUriComponentsBuilder
-//			.fromCurrentRequest()
-//			.path("/{id}")
-//			.buildAndExpand(savedUser.getId()).toUri();
-//		
-//		return ResponseEntity.created(location).build();
+		return ResponseEntity.ok(new UserClientResponse(savedUser.getId(), savedUser.getUsername(), "/oauth/token"));
 		
 	}
-	
-	
-//	@PostMapping(value="/register")
-//	public ResponseEntity<User> createNewUser(@RequestBody User newUser) {
-//		System.out.println("C_USER | createNewUser()");
-//		
-//		User user = attemptNewUserSave(newUser);
-//		//if (user == null)
-//			//return ResponseEntity.noContent().build();
-//
-//		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(
-//				"/{id}").buildAndExpand(user.getId()).toUri();
-//
-//		return ResponseEntity.created(location).build();
-//		
-//	}
-//	
-//	private User attemptNewUserSave(User newUser) {
-//		try {
-//			UserService uService = new UserService();
-//
-//			return uService.save(new User(
-//					newUser.getUsername(),
-//					newUser.getPassword(),
-//	                Arrays.asList(new Role("USER"), new Role("ACTUATOR")), 
-//	                true
-//	        ));
-//		}catch(Exception use) {
-//			System.out.println(use.getMessage());
-//			throw new UserSavingException(use.getMessage());
-//		}
-//	}
+
 }

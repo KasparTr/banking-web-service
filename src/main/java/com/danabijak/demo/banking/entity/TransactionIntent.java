@@ -114,8 +114,16 @@ public class TransactionIntent {
 	public String toString() {
 		return "source: " + this.source.getName() + ", " + "beneficiary: " + this.beneficiary.getName() + ", " + "isValid: " + this.isValid;
 	}
-	
-	
 
+	public TransactionalEntity getBeneficiary() {
+		return beneficiary;
+	}
+
+	public TransactionalEntity getSource() {
+		return source;
+	}
+	
+	
+	
 
 }

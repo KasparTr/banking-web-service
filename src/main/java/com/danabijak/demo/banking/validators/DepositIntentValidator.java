@@ -29,7 +29,7 @@ public class DepositIntentValidator extends TransactionIntentValidatorImpl {
 	
 	
 	private boolean beneficiaryBalanceLimitIsExceededAfterAmountOn(TransactionIntent intent) {
-		return (intent.beneficiary.getBankAccount().getBalance().getTotal().plus(intent.amount).getAmount().compareTo(Balance.DEFAULT_LIMITS.MAX_TOTAL_BALANCE) > 0);
+		return (Balance.DEFAULT_LIMITS.MAX_TOTAL_BALANCE.compareTo(intent.beneficiary.getBankAccount().getBalance().getTotal().plus(intent.amount).getAmount()) < 0);
 	}
 	
 	private boolean beneficiaryAllowedDepositLimitIsExceededByAmountOn(TransactionIntent intent) {

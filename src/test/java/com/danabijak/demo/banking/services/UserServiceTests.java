@@ -91,11 +91,11 @@ public class UserServiceTests {
 	}
 
 	
-	@Test
-	public void testFind_correct_user_is_found() {
-		User foundUser = userService.find(EXISTING_USER_ID);
-		assertEquals(foundUser.getUsername(), VALID_USERNAME_EXAMPLE);
-	}
+//	@Test
+//	public void testFind_correct_user_is_found() {
+//		User foundUser = userService.find(EXISTING_USER_ID);
+//		assertEquals(foundUser.getUsername(), VALID_USERNAME_EXAMPLE);
+//	}
 	
 	@Test(expected = UserNotFoundException.class)
 	public void testFind_throw_UserNotFoundException_if_no_user() {

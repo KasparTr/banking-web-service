@@ -28,7 +28,6 @@ public class TransactionServiceImpl implements TransactionService{
 	@Override
 	public Transaction porcess(TransactionIntent intent) throws TransactionServiceException {
 		try {
-			System.out.println("TransactionServiceImpl | process() | processing...");
 			if(intent.isValid()) {
 				
 				intent.source.getBankAccount().getBalance().decreaseTotal(intent.amount);
@@ -46,7 +45,6 @@ public class TransactionServiceImpl implements TransactionService{
 				throw new TransactionServiceException("Transaction intent is not valid. Transaction not made!");
 			}
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
 			throw new TransactionServiceException("Cannot process intent, error: " + e.getMessage());
 		}
 		

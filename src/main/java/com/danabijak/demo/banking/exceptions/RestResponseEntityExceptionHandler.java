@@ -11,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
+import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.users.exceptions.UserSavingException;
 
 @ControllerAdvice
@@ -36,5 +37,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		ExceptionResponse er = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity(er, HttpStatus.INTERNAL_SERVER_ERROR); 
 	}
+	
+	@ExceptionHandler(UserObjectNotValidException.class)
+	public final ResponseEntity<Object> handleUserNotValidException(UserSavingException ex, WebRequest request) throws Exception {
+		ExceptionResponse er = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity(er, HttpStatus.BAD_REQUEST); 
+	}
+	
+	
+	
+	
+	
 	
 }

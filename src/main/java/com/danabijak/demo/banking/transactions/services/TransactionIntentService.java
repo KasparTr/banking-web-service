@@ -1,6 +1,8 @@
 package com.danabijak.demo.banking.transactions.services;
 
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
@@ -23,5 +25,6 @@ public interface TransactionIntentService {
 	 * @return - Report describes the publishing status of the intent.
 	 * @throws TransactionIntentPublishException - if something goes horribly wrong here.
 	 */
+	@Transactional
 	public TransactionIntent attemptPublish(TransactionIntent intent) throws TransactionIntentPublishException;
 }

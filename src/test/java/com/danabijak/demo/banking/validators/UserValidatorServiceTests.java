@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.validators;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

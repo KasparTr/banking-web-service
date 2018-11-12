@@ -1,7 +1,11 @@
 package com.danabijak.demo.banking.transactions.services;
 
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
@@ -11,17 +15,21 @@ import com.danabijak.demo.banking.transactions.http.TransactionIntentClientRespo
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
 
 @Component
+@Repository
 public abstract class TransactionIntentServiceImpl implements TransactionIntentService{
 	
 	@Autowired
 	private TransactionIntentRepository transactionIntentRepo;
 	
-	//TODO: ASYNCH CHECK!!!!
+	@Transactional
 	public TransactionIntent attemptPublish(TransactionIntent intent){	// MUST BE ASYNC!!
 		ValidationReport validationReport = validateIntent(intent);
 		
 		if(validationReport.valid) {
+			System.out.println("TransactionIntentServiceImpl | attemptPublish() | intent validated: " + intent.toString());
 			transactionIntentRepo.save(intent);
+			System.out.println("TransactionIntentServiceImpl | attemptPublish() | intent saved");
+
 			reserverParticipantsBalance(intent);
 			return publish(intent);
 		}else {
@@ -32,7 +40,7 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 
 	/**
 	 * NB! Publishing intents to messaging channel is not implement yet.
-	 * TOOD: Instead of directly sending intent to TransactionSerice for processing, publish the intent to the intent pool and 
+	 * TODO: Instead of directly sending intent to TransactionSerice for processing, publish the intent to the intent pool and 
 	 * 	have the TransactionService (as a subscriber) process the intents.
 	 */
 	protected TransactionIntent publish(TransactionIntent intent) {
@@ -44,6 +52,5 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 
 	protected abstract ValidationReport validateIntent(TransactionIntent intent);
 	protected abstract void reserverParticipantsBalance(TransactionIntent intent);
-
 
 }

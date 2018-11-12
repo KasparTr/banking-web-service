@@ -32,10 +32,13 @@ public abstract class TransactionIntentValidatorImpl implements TransactionInten
 			intent.setIntentAsNotValid();
 			Optional<List<String>> faultyParts = Optional.of(faults);
 			report = new ValidationReport(false, faultyParts);
-		}else 
+			System.out.println("TransactionIntentValidatorImpl | intent not valid");
+		}else {
 			intent.setIntentAsValid();
 			report = new ValidationReport(true);
-		
+			System.out.println("TransactionIntentValidatorImpl | intent valid");
+		}
+			
 		return report;
 				
 	}
