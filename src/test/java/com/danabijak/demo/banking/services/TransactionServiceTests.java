@@ -1,11 +1,9 @@
 package com.danabijak.demo.banking.services;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
-import java.math.BigDecimal;
 
 import javax.annotation.Resource;
 
@@ -17,13 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.GlobalMethodsForTesting;
-import com.danabijak.demo.banking.entity.Balance;
-import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
@@ -31,11 +26,8 @@ import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.infra.repositories.TransactionRepository;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
-import com.danabijak.demo.banking.transactions.factories.TransactionIntentFactory;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.services.TransactionServiceImpl;
-import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
-import com.danabijak.demo.banking.users.services.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -115,7 +107,7 @@ public class TransactionServiceTests {
 	public void testProcess_source_balance_lowered_by_transaction_amount() {
 		Money money = Money.of(CurrencyUnit.USD, 25.00);
 		User sourceUser = GlobalMethodsForTesting.getDummyDefaultUser();
-		Money startBalance = sourceUser.getBankAccount().getBalance().getTotal();
+		Money startBalance = sourceUser.getBankAccount().getBalance();
 		TransactionIntent intent = new TransactionIntentBuilder()
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
 				.beneficiary(GlobalMethodsForTesting.getDummyDefaultUser())
@@ -125,7 +117,7 @@ public class TransactionServiceTests {
 		
 		intent.setIntentAsValid();
 		Transaction transaction = transactionService.porcess(intent);
-		Money endBalance = sourceUser.getBankAccount().getBalance().getTotal();
+		Money endBalance = sourceUser.getBankAccount().getBalance();
 		
 		assertTrue(startBalance.minus(money).isEqual(endBalance));
 	}
@@ -134,7 +126,7 @@ public class TransactionServiceTests {
 	public void testProcess_beneficiary_balance_increased_by_transaction_amount() {
 		Money money = Money.of(CurrencyUnit.USD, 25.00);
 		User beneficiaryUser = GlobalMethodsForTesting.getDummyDefaultUser();
-		Money startBalance = beneficiaryUser.getBankAccount().getBalance().getTotal();
+		Money startBalance = beneficiaryUser.getBankAccount().getBalance();
 		TransactionIntent intent = new TransactionIntentBuilder()
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
 				.beneficiary(beneficiaryUser )
@@ -144,7 +136,7 @@ public class TransactionServiceTests {
 		
 		intent.setIntentAsValid();
 		Transaction transaction = transactionService.porcess(intent);
-		Money endBalance = beneficiaryUser.getBankAccount().getBalance().getTotal();
+		Money endBalance = beneficiaryUser.getBankAccount().getBalance();
 		
 		assertTrue(startBalance.plus(money).isEqual(endBalance));
 	}

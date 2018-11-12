@@ -88,7 +88,7 @@ public class UserController {
 			
 			BankAccountStatementClientResponse statement = baStatementFactory.generateStatement(
 					user, 
-					correctAccount.getId(), 
+					correctAccount, 
 					transactionService.getTransactionsOf(correctAccount));
 
 			return ResponseEntity.ok(statement);

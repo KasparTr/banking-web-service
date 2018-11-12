@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.danabijak.demo.banking.entity.Balance;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
 
@@ -29,7 +28,7 @@ public class WithdrawIntentValidator extends TransactionIntentValidatorImpl {
 
 	
 	protected boolean sourceBalanceIsLessThanAmountOn(TransactionIntent intent) {
-		return intent.source.getBankAccount().getBalance().getTotal().isLessThan(intent.amount);
+		return intent.source.getBankAccount().getBalance().isLessThan(intent.amount);
 	}
 
 	protected boolean sourceAllowedWithdrawLimitIsExceededByAmountOn(TransactionIntent intent) {

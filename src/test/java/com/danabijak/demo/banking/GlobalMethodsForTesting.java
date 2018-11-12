@@ -2,7 +2,6 @@ package com.danabijak.demo.banking;
 
 import java.math.BigDecimal;
 
-import com.danabijak.demo.banking.entity.Balance;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.User;
 
@@ -14,7 +13,7 @@ public class GlobalMethodsForTesting {
 		User user = new User(VALID_USERNAME_EXAMPLE,VALID_PASSWORD_EXAMPLE);
 
 		BankAccount ba = new BankAccount(BankAccount.DEFAULT_CURRENCY.USD, user.getUsername());
-		ba.getBalance().setTotalAmount(new BigDecimal(i));
+		ba.setBalance(new BigDecimal(i));
 		user.attachBankAccount(ba);
 
 		return user;
@@ -24,7 +23,7 @@ public class GlobalMethodsForTesting {
 		User user = new User(VALID_USERNAME_EXAMPLE,VALID_PASSWORD_EXAMPLE);
 
 		BankAccount ba = new BankAccount(BankAccount.DEFAULT_CURRENCY.USD, user.getUsername());
-		ba.getBalance().setTotalAmount(Balance.DEFAULT_LIMITS.BANKING_USER_START_BALANCE);
+		ba.setBalance(BankAccount.DEFAULT_LIMITS.BANKING_USER_START_BALANCE);
 		user.attachBankAccount(ba);
 
 		return user;

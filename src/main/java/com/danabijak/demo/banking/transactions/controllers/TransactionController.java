@@ -41,18 +41,15 @@ public class TransactionController {
 
 	
 	@Autowired
-	//@Qualifier("depositIntentService")
+	@Qualifier("depositIntentService")
 	private DepositIntentService depositIntentService;
 	
-	//@Autowired
-	//@Qualifier("withdrawIntentService")
-	//private WithdrawIntentService withdrawIntentService;
+	@Autowired
+	@Qualifier("withdrawIntentService")
+	private WithdrawIntentService withdrawIntentService;
 	
 	@Autowired
 	private TransactionService transactionService;
-	
-	@Autowired
-	private UserService userService;
 	
 	@Autowired
 	private TransactionIntentFactory transactionIntentFactory;
@@ -69,7 +66,12 @@ public class TransactionController {
 	@PostMapping("/services/transactions/deposit")
 	public CompletableFuture<ResponseEntity<TransactionIntentClientResponse>> deposit(@Valid @RequestBody TransactionClientRequest request) {
 		
-		return depositIntentService.publish(request).thenApply(intent -> {
+		CompletableFuture<TransactionIntent> depositIntentFuture = 
+				transactionIntentFactory.createDepositIntent(
+						request.entity.id,
+						Money.of(CurrencyUnit.of(request.money.currency), request.money.amount));
+		
+		return depositIntentService.publishIntent(request).thenApply(intent -> {
 			transactionService.porcess(intent);
 			//transactionService.porcessAllIntents();
 			

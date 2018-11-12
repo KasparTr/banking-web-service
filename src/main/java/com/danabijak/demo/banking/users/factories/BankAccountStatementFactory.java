@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionalEntity;
 import com.danabijak.demo.banking.transactions.http.BankAccountStatementClientResponse;
@@ -16,7 +17,7 @@ public class BankAccountStatementFactory {
 	
 	public BankAccountStatementClientResponse generateStatement(
 			TransactionalEntity entity, 
-			long accountId,
+			BankAccount account,
 			AccountTransactions transactions) {
 		
 		List<TransactionClientResponse> transClientResponses = new ArrayList<>();		
@@ -33,7 +34,11 @@ public class BankAccountStatementFactory {
 					trans));
 		}
 		
-		return new BankAccountStatementClientResponse(accountId, entity.getName(), transClientResponses);
+		return new BankAccountStatementClientResponse(
+				account.getId(), 
+				entity.getName(), 
+				transClientResponses,
+				account.getBalance().getAmount());
 
 	}
 

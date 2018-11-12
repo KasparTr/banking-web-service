@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.danabijak.demo.banking.entity.Balance;
+import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.users.factories.UserFactoryImpl;
@@ -40,9 +40,9 @@ public class UserFactoryImplTests {
 	public void testMakeDefaultBankingUser_user_balance_is_default() {
 		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
 		userFactory.makeDefaultBankingUser(testUser);
-		BigDecimal userBalance = testUser.getBankAccount().getBalance().getTotal().getAmount();
+		BigDecimal userBalance = testUser.getBankAccount().getBalance().getAmount();
 
-		assertEquals(0, userBalance.compareTo(Balance.DEFAULT_LIMITS.BANKING_USER_START_BALANCE));
+		assertEquals(0, userBalance.compareTo(BankAccount.DEFAULT_LIMITS.BANKING_USER_START_BALANCE));
 	}
 	
 	@Test

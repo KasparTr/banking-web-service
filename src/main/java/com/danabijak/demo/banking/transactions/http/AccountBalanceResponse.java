@@ -17,8 +17,8 @@ public class AccountBalanceResponse {
 		super();
 		this.accountName = account.getName();
 		this.accountId = account.getId();
-		this.balance = account.getBalance().getTotal().getAmount();
-		this.currency =account.getBalance().getTotal().getCurrencyUnit().toString();
+		this.balance = account.getBalance().getAmount();
+		this.currency =account.getBalance().getCurrencyUnit().toString();
 	}
 	
 	

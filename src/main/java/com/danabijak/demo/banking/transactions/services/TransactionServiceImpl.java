@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.danabijak.demo.banking.accounts.repositories.AccountRepository;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionIntent;
@@ -34,22 +38,33 @@ public class TransactionServiceImpl implements TransactionService{
 	private TransactionIntentRepository transactionIntentRepo;
 	
 	@Autowired
-	private UserService userService;
+	private AccountRepository accountRepository;
 	
 	@Override
 	public void porcessAllIntents() throws TransactionServiceException {
 		List<TransactionIntent> allIntents = transactionIntentRepo.findAll();
 		for(TransactionIntent i:allIntents) {
-			System.out.println("TransactionService | process() | Intent " + i.toString());
 			if(!i.isPaid()) {
-				System.out.println("TransactionService | process() | This intent is not paid, will process " + i.toString());
 				process(i);
 			}
 		}
 	}
 
-	private Transaction process(TransactionIntent intent) {
-		updateBalances(intent);
+	private Transaction process(TransactionIntent intent) throws TransactionServiceException{
+		
+		Optional<BankAccount> sourceAccount = accountRepository.findById(intent.source.getBankAccount().getId());		
+		Optional<BankAccount> beneAccount = accountRepository.findById(intent.beneficiary.getBankAccount().getId());
+		
+		if(sourceAccount.isPresent() && beneAccount.isPresent()) {
+
+			sourceAccount.get().decreaseBalance(intent.amount);
+			beneAccount.get().increaseBalance(intent.amount);
+			
+			accountRepository.save(sourceAccount.get());
+			accountRepository.save(beneAccount.get());
+		}else {
+			throw new TransactionServiceException("Cannot find intendad bank accounts");
+		}
 		
 		Transaction transaction = new Transaction(
 				intent.amount, 
@@ -58,30 +73,8 @@ public class TransactionServiceImpl implements TransactionService{
 				"Successfully made transaction");
 		
 		transactionRepo.save(transaction);
-		System.out.println("Transaction saved to repo, marking intent as paid");
 		intent.setPaidTo(true);
 		return transaction;
-	}
-	
-	private void updateBalances(TransactionIntent intent) {
-
-		CompletableFuture<User> sourceUserFuture = userService.find(intent.source.getId());
-		CompletableFuture<User> bebenfUserFuture = userService.find(intent.beneficiary.getId());
-		
-		CompletableFuture<Void> allUserFutures = CompletableFuture.allOf(sourceUserFuture, bebenfUserFuture);
-		
-		allUserFutures.thenAccept(it -> {
-		    User userSource = sourceUserFuture.join();
-		    User userBeneficiary = bebenfUserFuture.join();
-		    
-		    System.out.println("updateBalances() | userSource: " + userSource.getBankAccount().getBalance().getTotal().getAmount());
-		    System.out.println("updateBalances() | userBeneficiary: " + userBeneficiary.getBankAccount().getBalance().getTotal().getAmount());
-
-		    userSource.getBankAccount().getBalance().decreaseTotal(intent.amount);
-		    userBeneficiary.getBankAccount().getBalance().increaseTotal(intent.amount);
-		});
-		
-		
 	}
 	
 	@Override

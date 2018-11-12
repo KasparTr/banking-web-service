@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.danabijak.demo.banking.entity.Balance;
+import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
 
@@ -29,7 +29,7 @@ public class DepositIntentValidator extends TransactionIntentValidatorImpl {
 	
 	
 	private boolean beneficiaryBalanceLimitIsExceededAfterAmountOn(TransactionIntent intent) {
-		return (Balance.DEFAULT_LIMITS.MAX_TOTAL_BALANCE.compareTo(intent.beneficiary.getBankAccount().getBalance().getTotal().plus(intent.amount).getAmount()) < 0);
+		return (BankAccount.DEFAULT_LIMITS.MAX_TOTAL_BALANCE.compareTo(intent.beneficiary.getBankAccount().getBalance().plus(intent.amount).getAmount()) < 0);
 	}
 	
 	private boolean beneficiaryAllowedDepositLimitIsExceededByAmountOn(TransactionIntent intent) {

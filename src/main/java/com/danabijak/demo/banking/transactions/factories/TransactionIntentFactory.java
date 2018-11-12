@@ -24,7 +24,7 @@ public class TransactionIntentFactory {
 	@Autowired
 	private UserService userService;
 
-	
+	// TODO: Remove unneeded complexity of CompletableFuture<user> here.
 	@Async("asyncExecutor")
 	public CompletableFuture<TransactionIntent> createDepositIntent(long beneficiaryId, Money money) {
 		System.out.println("TransactionIntentFactory | userService: " + userService);
@@ -35,14 +35,40 @@ public class TransactionIntentFactory {
 		CompletableFuture<Void> allUserFutures = CompletableFuture.allOf(bank, user);
 		
 		return allUserFutures.thenApply(it -> {
-		    User userSource = bank.join();
-		    User userBeneficiary = user.join();
+		    User bUser = bank.join();
+		    User uUser = user.join();
 		    
 		    
 		    TransactionIntent intent = new TransactionIntentBuilder()
 					.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
-					.beneficiary(userBeneficiary)
-					.source(userSource)
+					.beneficiary(uUser)
+					.source(bUser)
+					.amount(money)
+					.build();
+		    
+		    return intent;
+			
+		});
+	}
+	
+	@Async("asyncExecutor")
+	public CompletableFuture<TransactionIntent> createWithdrawIntent(long sourceId, Money money) {
+		System.out.println("TransactionIntentFactory | userService: " + userService);
+		
+		CompletableFuture<User> bank = userService.findByUsername("bankItself@bank.com");
+		CompletableFuture<User> user = userService.find(sourceId);
+		
+		CompletableFuture<Void> allUserFutures = CompletableFuture.allOf(bank, user);
+		
+		return allUserFutures.thenApply(it -> {
+		    User bUser = bank.join();
+		    User uUser = user.join();
+		    
+		    
+		    TransactionIntent intent = new TransactionIntentBuilder()
+					.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
+					.beneficiary(bUser)
+					.source(uUser)
 					.amount(money)
 					.build();
 		    

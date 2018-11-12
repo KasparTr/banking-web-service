@@ -29,8 +29,9 @@ public interface TransactionIntentService {
 	 * @return - Report describes the publishing status of the intent.
 	 * @throws TransactionIntentPublishException - if something goes horribly wrong here.
 	 */
-	public TransactionIntent attemptPublish(TransactionIntent intent) throws TransactionIntentPublishException;
-
 	@Async("asyncExecutor")
-	public CompletableFuture<TransactionIntent> publish(TransactionClientRequest intentRequest) throws TransactionIntentPublishException;
+	public CompletableFuture<TransactionIntent> publish(TransactionIntent intent) throws TransactionIntentPublishException;
+	
+	@Async("asyncExecutor")
+	public CompletableFuture<TransactionIntent> publishIntent(TransactionClientRequest intentRequest) throws TransactionIntentPublishException;
 }

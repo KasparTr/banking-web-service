@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.GlobalMethodsForTesting;
-import com.danabijak.demo.banking.entity.Balance;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
@@ -78,7 +77,7 @@ public class DepositIntentValidatorTests {
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
 				.beneficiary(beneficiary)
 				.source(source)
-				.amount(Money.of(CurrencyUnit.USD, Balance.DEFAULT_LIMITS.MAX_TOTAL_BALANCE.add(new BigDecimal(1000))))
+				.amount(Money.of(CurrencyUnit.USD, BankAccount.DEFAULT_LIMITS.MAX_TOTAL_BALANCE.add(new BigDecimal(1000))))
 				.build();
 		ValidationReport report = validator.validate(intent);
 		assertFalse(report.valid);
