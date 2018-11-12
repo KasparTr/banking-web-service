@@ -28,8 +28,7 @@ public class TransactionServiceImpl implements TransactionService{
 	@Override
 	public Transaction porcess(TransactionIntent intent) throws TransactionServiceException {
 		try {
-			if(intent.isValid()) {
-				
+			if(intent.isValid()) {				
 				intent.source.getBankAccount().getBalance().decreaseTotal(intent.amount);
 				intent.beneficiary.getBankAccount().getBalance().increaseTotal(intent.amount);
 				
@@ -40,6 +39,7 @@ public class TransactionServiceImpl implements TransactionService{
 						"Successfully made transaction");
 				
 				transactionRepo.save(transaction);
+				System.out.println("Transaction saved to repo");
 				return transaction;
 			}else {
 				throw new TransactionServiceException("Transaction intent is not valid. Transaction not made!");

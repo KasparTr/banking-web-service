@@ -5,15 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 
-import javax.annotation.Resource;
-
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -24,27 +19,23 @@ import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
-import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
-import com.danabijak.demo.banking.transactions.services.DepositIntentService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DepositIntentValidatorTests {
-	private TransactionIntentValidator validator = new DepositIntentValidator();
-
+public class WithdrawIntentValidatorTests {
+	private TransactionIntentValidator validator = new WithdrawIntentValidator();
 	
 	
 	@Test
 	public void testValidate_pass_valid_intent() {
-		
+
 		User beneficiary = GlobalMethodsForTesting.getDummyDefaultUser();
 		User source = GlobalMethodsForTesting.getDummyDefaultUser();
 
 		TransactionIntent validItent = new TransactionIntentBuilder()
-				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
+				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Withdraw info"))
 				.beneficiary(beneficiary)
 				.source(source)
 				.amount(Money.of(CurrencyUnit.USD, 20))
@@ -60,7 +51,7 @@ public class DepositIntentValidatorTests {
 		User source = GlobalMethodsForTesting.getDummyDefaultUser();
 
 		TransactionIntent intent = new TransactionIntentBuilder()
-				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
+				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Withdraw nfo"))
 				.beneficiary(beneficiary)
 				.source(source)
 				.amount(Money.of(CurrencyUnit.USD, 12309133.45))
@@ -70,7 +61,7 @@ public class DepositIntentValidatorTests {
 	}
 	
 	@Test
-	public void testValidate_inValid_intent_over_balance_limit(){
+	public void testValidate_inValid_intent_negative_balance_after_withdraw(){
 		User beneficiary = GlobalMethodsForTesting.getDummyDefaultUser();
 		User source = GlobalMethodsForTesting.getDummyDefaultUser();
 
@@ -78,7 +69,7 @@ public class DepositIntentValidatorTests {
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
 				.beneficiary(beneficiary)
 				.source(source)
-				.amount(Money.of(CurrencyUnit.USD, Balance.DEFAULT_LIMITS.MAX_TOTAL_BALANCE.add(new BigDecimal(1000))))
+				.amount(source.getBankAccount().getBalance().getTotal().plus(new BigDecimal(100)))
 				.build();
 		ValidationReport report = validator.validate(intent);
 		assertFalse(report.valid);
@@ -91,7 +82,7 @@ public class DepositIntentValidatorTests {
 	}
 	
 	@Test
-	public void testValidate_inValid_intent_over_deposit_limit(){
+	public void testValidate_inValid_intent_over_withdraw_limit(){
 		User beneficiary = GlobalMethodsForTesting.getDummyDefaultUser();
 		User source = GlobalMethodsForTesting.getDummyDefaultUser();
 
@@ -112,4 +103,6 @@ public class DepositIntentValidatorTests {
 		
 	}
 
+
 }
+

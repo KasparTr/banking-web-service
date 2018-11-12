@@ -32,13 +32,13 @@ public class UserValidatorServiceTests {
 
 	@InjectMocks
 	@Resource
-	private UserValidatorServiceImpl uvs;
+	private UserValidatorServiceImpl uvs = new UserValidatorServiceImpl();
 	
 	@org.junit.Before
 	public void setUp() throws Exception {
-	    // Initialize mocks created above
+		// Initialize mocks created above
 	    MockitoAnnotations.initMocks(this);
-	    setUpIsDone = true;
+	    
 	    
 	    // Change Mocks behavior for user queries
 	    User nUser = new User("existing@gmail.com", "exit342User@Psw");
@@ -46,6 +46,7 @@ public class UserValidatorServiceTests {
 	    
 	    Optional<User> emptyUser = Optional.empty();
 	    when(userRepository.findByUsername(NOT_FOUND_USERNAME)).thenReturn(emptyUser);
+	    this.setUpIsDone = true;
 	}
 	
 	@Test

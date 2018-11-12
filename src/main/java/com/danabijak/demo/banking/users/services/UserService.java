@@ -74,13 +74,15 @@ public class UserService {
     }
 	
 	@Async("asyncExecutor")
-	public CompletableFuture<User> find(long id) {
+	public CompletableFuture<User> find(long id) throws UserNotFoundException{
 		Optional<User> user = userRepository.findById(id);
 		
-		if(user.isPresent())
+		if(user.isPresent()) {
 			return CompletableFuture.completedFuture(user.get());
-		else 
+		}
+		else {
 			throw new UserNotFoundException(String.format("User with ID %s not found", id));
+		}
     }
 	
 	@Async("asyncExecutor")
@@ -94,13 +96,17 @@ public class UserService {
     }
 	
 	@Async("asyncExecutor")
-	public List<User> getAll() {
+	public CompletableFuture<List<User>> getAll() {
 		List<User> users = userRepository.findAll();
 
 		if(users.isEmpty())
 			throw new UserNotFoundException("No Users Found");
-		else 
-			return users;
+		else {
+			CompletableFuture<List<User>> usersFuture 
+		      = new CompletableFuture<>();
+			usersFuture.complete(users);
+			return usersFuture;
+		}
     }
 	
 

@@ -87,9 +87,9 @@ public class UserValidatorServiceImpl implements UserValidatorService{
 	
 	public boolean isUserTaken(User user) {
 		Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
-		if(existingUser.isPresent()) return true;
-		
-		return false;
+		if(existingUser == null) return false;
+		else if(existingUser.isPresent()) return true;
+		else return false;
 		
 	}
 

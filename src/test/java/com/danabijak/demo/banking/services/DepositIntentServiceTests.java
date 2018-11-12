@@ -1,9 +1,11 @@
 package com.danabijak.demo.banking.services;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Resource;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.danabijak.demo.banking.GlobalMethodsForTesting;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
@@ -36,13 +39,12 @@ import com.danabijak.demo.banking.users.services.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TransactionDepositIntentServiceTests {
+public class DepositIntentServiceTests {
 	
 	// Not using BeforeClass here because static methods don't work with @Autowired
 	private static boolean setUpIsDone = false;
 	
-	private static String VALID_USERNAME_EXAMPLE = "test@email.com";
-	private static String VALID_PASSWORD_EXAMPLE = "pAS24@a3asd2KSH";
+	
 	
 	@Mock
 	private TransactionIntentRepository transactionIntentRepo;
@@ -50,12 +52,22 @@ public class TransactionDepositIntentServiceTests {
 	@InjectMocks
 	@Resource
 	private DepositIntentService depositIntentService;
+	
+	@org.junit.Before
+	public void setUp() throws Exception {
+		if(!setUpIsDone) {
+			// Initialize mocks created above
+		    MockitoAnnotations.initMocks(this);
+		    setUpIsDone = true;
+		}
+	    
+	}
 
 	
 	@Test
 	public void testAttemptPublish_valid_intent_is_saved_to_repo(){
-		User beneficiary = getDummyUserWithBankAccountSetTo(3000);
-		User source = getDummyUserWithBankAccountSetTo(3000);
+		User beneficiary = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(3000);
+		User source = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(3000);
 
 		TransactionIntent validIntent = new TransactionIntentBuilder()
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
@@ -72,9 +84,9 @@ public class TransactionDepositIntentServiceTests {
 	
 	@Test(expected = TransactionIntentPublishException.class)
 	public void testAttemptPublish_invalid_intent_throws(){
-		User beneficiary = getDummyUserWithBankAccountSetTo(30);
-		User source = getDummyUserWithBankAccountSetTo(30);
-
+		User beneficiary = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(30);
+		User source = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(30);
+		
 		TransactionIntent invalidIntent = new TransactionIntentBuilder()
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
 				.beneficiary(beneficiary)
@@ -84,15 +96,26 @@ public class TransactionDepositIntentServiceTests {
 		
 		depositIntentService.attemptPublish(invalidIntent);		
 	}
+	
+	@Test
+	public void testAttemptPublish_beneficiary_depo_limit_decreased(){
+		User beneficiary = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(100);
+		User source = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(100);
+		Money transactionAmount = Money.of(CurrencyUnit.USD, 200);
 
-	private User getDummyUserWithBankAccountSetTo(int i) {
-		User user = new User(VALID_USERNAME_EXAMPLE,VALID_PASSWORD_EXAMPLE);
-
-		BankAccount ba = new BankAccount(BankAccount.DEFAULT_CURRENCY.USD, user.getUsername());
-		ba.getBalance().setTotalAmount(new BigDecimal(i));
-		user.attachBankAccount(ba);
-
-		return user;
+		BigDecimal depoLimitBefore = beneficiary.getLimits().getAllowedDeposit();
+		TransactionIntent intent = new TransactionIntentBuilder()
+				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
+				.beneficiary(beneficiary)
+				.source(source)
+				.amount(transactionAmount)
+				.build();
+		
+		depositIntentService.attemptPublish(intent);	
+		BigDecimal depoLimitAfter = intent.beneficiary.getLimits().getAllowedDeposit();
+		assertTrue(depoLimitBefore.subtract(transactionAmount.getAmount()).compareTo(depoLimitAfter) == 0);
 	}
+
+	
 
 }

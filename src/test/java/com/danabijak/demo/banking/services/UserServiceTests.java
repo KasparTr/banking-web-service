@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
 
@@ -28,6 +30,7 @@ import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.users.services.UserService;
 import com.danabijak.demo.banking.entity.Role;
+import com.danabijak.demo.banking.entity.TransactionIntentStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,8 +47,6 @@ public class UserServiceTests {
 	
 	private static String FAULTY_PASSWORD_EXAMPLE = "1234";
 	private static String VALID_PASSWORD_EXAMPLE = "pAS24@a3asd2KSH";
-
-	
 	
 	
 	@Mock
@@ -57,16 +58,17 @@ public class UserServiceTests {
 	
 	@org.junit.Before
 	public void setUp() throws Exception {
-	    // Initialize mocks created above
+		// Initialize mocks created above
 	    MockitoAnnotations.initMocks(this);
-	    setUpIsDone = true;
+	    
 	    
 	    // Change Mocks behavior for user queries
 	    User nUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
 	    when(userRepository.findById(EXISTING_USER_ID)).thenReturn(Optional.of(nUser));
 	    
 	    Optional<User> emptyUser = Optional.empty();
-	    when(userRepository.findById(NON_EXISTING_USER_ID)).thenReturn(emptyUser);
+	    when(userRepository.findById(NON_EXISTING_USER_ID)).thenReturn(emptyUser);	    
+    
 	}
 	
 	@Test(expected = UserObjectNotValidException.class)
@@ -91,22 +93,33 @@ public class UserServiceTests {
 	}
 
 	
-//	@Test
-//	public void testFind_correct_user_is_found() {
-//		User foundUser = userService.find(EXISTING_USER_ID);
-//		assertEquals(foundUser.getUsername(), VALID_USERNAME_EXAMPLE);
-//	}
-	
 	@Test(expected = UserNotFoundException.class)
-	public void testFind_throw_UserNotFoundException_if_no_user() {
-		userService.find(NON_EXISTING_USER_ID);
+	public void testFind_throw_UserNotFoundException_if_no_user() throws Throwable {
+		
+		CompletableFuture<User> future = userService.find(NON_EXISTING_USER_ID);
+		// The CompletableFuture wraps the real exception cause with ExecutionException. 
+		// We must catch that and see what caused that.
+		try {
+			future.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw e.getCause();
+		}
 	}
 	
 	@Test(expected = UserNotFoundException.class)
-	public void testGetAll_throw_UserNotFoundException_if_empty() {
-	    when(userRepository.findAll()).thenReturn(new ArrayList<User>());
+	public void testGetAll_throw_UserNotFoundException_if_empty() throws Throwable{
+		List<User> returnableUsers = new ArrayList<>();
 
-		userService.getAll();
+		when(userRepository.findAll()).thenReturn(returnableUsers);
+
+		CompletableFuture<List<User>> future = userService.getAll();
+		// The CompletableFuture wraps the real exception cause with ExecutionException. 
+		// We must catch that and see what caused that.
+		try {
+			future.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw e.getCause();
+		}
 	}
 	
 	@Test
@@ -116,7 +129,10 @@ public class UserServiceTests {
 		
 	    when(userRepository.findAll()).thenReturn(returnableUsers);
 
-		List<User> users = userService.getAll();
-		assertTrue(users.size() > 0);
+	    CompletableFuture<List<User>> usersFuture = userService.getAll();
+	    usersFuture.thenAccept(users -> {
+	    	assertTrue(users.size() > 0);
+		});
+		
 	}
 }

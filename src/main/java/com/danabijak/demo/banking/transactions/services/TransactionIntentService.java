@@ -25,6 +25,5 @@ public interface TransactionIntentService {
 	 * @return - Report describes the publishing status of the intent.
 	 * @throws TransactionIntentPublishException - if something goes horribly wrong here.
 	 */
-	@Transactional
 	public TransactionIntent attemptPublish(TransactionIntent intent) throws TransactionIntentPublishException;
 }

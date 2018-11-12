@@ -1,5 +1,6 @@
 package com.danabijak.demo.banking.services;
 
+import static org.hamcrest.CoreMatchers.any;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -14,10 +15,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.danabijak.demo.banking.GlobalMethodsForTesting;
 import com.danabijak.demo.banking.entity.Balance;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Transaction;
@@ -37,9 +41,9 @@ import com.danabijak.demo.banking.users.services.UserService;
 @SpringBootTest
 public class TransactionServiceTests {
 	
-private static long EXISTING_USER_ID = 2000;
-	
-	private static long VALID_UID_EXAMPLE = 13;
+	// Not using BeforeClass here because static methods don't work with @Autowired
+	private static boolean setUpIsDone = false;
+		
 	private static String VALID_USERNAME_EXAMPLE = "test@email.com";
 	private static String VALID_PASSWORD_EXAMPLE = "pAS24@a3asd2KSH";
 	
@@ -50,13 +54,22 @@ private static long EXISTING_USER_ID = 2000;
 	@Resource
 	private TransactionServiceImpl transactionService;
 	
+	@org.junit.Before
+	public void setUp() throws Exception {
+		if(!setUpIsDone) {
+			// Initialize mocks created above
+		    MockitoAnnotations.initMocks(this);
+		    setUpIsDone = true;
+		}
+	}
+	
 	@Test(expected = TransactionServiceException.class)
 	public void testProcess_dont_process_invalid_intent() {
 		Money money = Money.of(CurrencyUnit.USD, 123.12);
 		TransactionIntent intent = new TransactionIntentBuilder()
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
-				.beneficiary(getDummyUser())
-				.source(getDummyUser())
+				.beneficiary(GlobalMethodsForTesting.getDummyDefaultUser())
+				.source(GlobalMethodsForTesting.getDummyDefaultUser())
 				.amount(money)
 				.build();
 		
@@ -67,11 +80,11 @@ private static long EXISTING_USER_ID = 2000;
 	
 	@Test
 	public void testProcess_create_valid_transaction_from_intent() {
-		Money money = Money.of(CurrencyUnit.USD, 123.12);
+		Money money = Money.of(CurrencyUnit.USD, 23.12);
 		TransactionIntent intent = new TransactionIntentBuilder()
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
-				.beneficiary(getDummyUser())
-				.source(getDummyUser())
+				.beneficiary(GlobalMethodsForTesting.getDummyDefaultUser())
+				.source(GlobalMethodsForTesting.getDummyDefaultUser())
 				.amount(money)
 				.build();
 		
@@ -85,26 +98,54 @@ private static long EXISTING_USER_ID = 2000;
 	
 	@Test
 	public void testProcess_save_transaction_to_repository() {
-		Money money = Money.of(CurrencyUnit.USD, 123.12);
+		Money money = Money.of(CurrencyUnit.USD, 23.12);
 		TransactionIntent intent = new TransactionIntentBuilder()
 				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
-				.beneficiary(getDummyUser())
-				.source(getDummyUser())
+				.beneficiary(GlobalMethodsForTesting.getDummyDefaultUser())
+				.source(GlobalMethodsForTesting.getDummyDefaultUser())
 				.amount(money)
 				.build();
 		
 		intent.setIntentAsValid();
 		Transaction transaction = transactionService.porcess(intent);
-		verify(transactionRepo).save(transaction);
+		verify(transactionRepo).save(Mockito.any(Transaction.class));
 	}
-
-	private User getDummyUser() {
-		User user = new User(VALID_USERNAME_EXAMPLE,VALID_PASSWORD_EXAMPLE);
-
-		BankAccount ba = new BankAccount(BankAccount.DEFAULT_CURRENCY.USD, user.getUsername());
-		ba.getBalance().setTotalAmount(Balance.DEFAULT_LIMITS.BANKING_USER_START_BALANCE);
-		user.attachBankAccount(ba);
-
-		return user;
+	
+	@Test
+	public void testProcess_source_balance_lowered_by_transaction_amount() {
+		Money money = Money.of(CurrencyUnit.USD, 25.00);
+		User sourceUser = GlobalMethodsForTesting.getDummyDefaultUser();
+		Money startBalance = sourceUser.getBankAccount().getBalance().getTotal();
+		TransactionIntent intent = new TransactionIntentBuilder()
+				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
+				.beneficiary(GlobalMethodsForTesting.getDummyDefaultUser())
+				.source(sourceUser)
+				.amount(money)
+				.build();
+		
+		intent.setIntentAsValid();
+		Transaction transaction = transactionService.porcess(intent);
+		Money endBalance = sourceUser.getBankAccount().getBalance().getTotal();
+		
+		assertTrue(startBalance.minus(money).isEqual(endBalance));
+	}
+	
+	@Test
+	public void testProcess_beneficiary_balance_increased_by_transaction_amount() {
+		Money money = Money.of(CurrencyUnit.USD, 25.00);
+		User beneficiaryUser = GlobalMethodsForTesting.getDummyDefaultUser();
+		Money startBalance = beneficiaryUser.getBankAccount().getBalance().getTotal();
+		TransactionIntent intent = new TransactionIntentBuilder()
+				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
+				.beneficiary(beneficiaryUser )
+				.source(GlobalMethodsForTesting.getDummyDefaultUser())
+				.amount(money)
+				.build();
+		
+		intent.setIntentAsValid();
+		Transaction transaction = transactionService.porcess(intent);
+		Money endBalance = beneficiaryUser.getBankAccount().getBalance().getTotal();
+		
+		assertTrue(startBalance.plus(money).isEqual(endBalance));
 	}
 }

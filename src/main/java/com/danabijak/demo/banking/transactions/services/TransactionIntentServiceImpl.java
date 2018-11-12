@@ -21,7 +21,6 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 	@Autowired
 	private TransactionIntentRepository transactionIntentRepo;
 	
-	@Transactional
 	public TransactionIntent attemptPublish(TransactionIntent intent){	// MUST BE ASYNC!!
 		ValidationReport validationReport = validateIntent(intent);
 		
