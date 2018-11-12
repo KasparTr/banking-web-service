@@ -15,6 +15,7 @@ import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 @Component
 public interface TransactionService {
 	public Transaction porcess(TransactionIntent intent) throws TransactionServiceException;
+	public void porcessAllIntents() throws TransactionServiceException;
 	
 	
 	public List<Transaction> getDebitTransactionsOf(BankAccount account) throws TransactionServiceException;

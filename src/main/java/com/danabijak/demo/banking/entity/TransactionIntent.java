@@ -31,10 +31,10 @@ public class TransactionIntent {
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	public final TransactionIntentStatus status;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
 	public final TransactionalEntity beneficiary;	//to
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
 	public final TransactionalEntity source;			//from
 	
 	// Can be set later
@@ -51,7 +51,7 @@ public class TransactionIntent {
 	TransactionIntent(){
 		this.amount= null;
 		this.createdAt = null;
-		this.status = null;
+		this.status=null;
 		this.beneficiary = null;
 		this.source = null;
 	}
@@ -114,16 +114,8 @@ public class TransactionIntent {
 	public String toString() {
 		return "source: " + this.source.getName() + ", " + "beneficiary: " + this.beneficiary.getName() + ", " + "isValid: " + this.isValid;
 	}
-
-	public TransactionalEntity getBeneficiary() {
-		return beneficiary;
+	
+	public boolean isPaid() {
+		return this.paid;
 	}
-
-	public TransactionalEntity getSource() {
-		return source;
-	}
-	
-	
-	
-
 }

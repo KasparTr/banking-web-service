@@ -20,10 +20,10 @@ public class Transaction {
 	
 	public final Money amount;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
 	public final BankAccount beneficiaryAccount;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
 	public final BankAccount sourceAccount;
 	
 	public final String details;

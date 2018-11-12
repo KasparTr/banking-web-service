@@ -29,7 +29,7 @@ public abstract class TransactionalEntity extends BaseEntity {
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private EntityTransferLimits limits;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, optional=true)
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST, optional=true)
 	private BankAccount bankAccount;		// Didn't make Java Optional cause of @OneToOne constraints. TODO: fix!
 	private String name;
 	

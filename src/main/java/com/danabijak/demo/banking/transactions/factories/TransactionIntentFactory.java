@@ -23,6 +23,7 @@ import com.danabijak.demo.banking.users.services.UserService;
 public class TransactionIntentFactory {
 	@Autowired
 	private UserService userService;
+
 	
 	@Async("asyncExecutor")
 	public CompletableFuture<TransactionIntent> createDepositIntent(long beneficiaryId, Money money) {
@@ -36,6 +37,7 @@ public class TransactionIntentFactory {
 		return allUserFutures.thenApply(it -> {
 		    User userSource = bank.join();
 		    User userBeneficiary = user.join();
+		    
 		    
 		    TransactionIntent intent = new TransactionIntentBuilder()
 					.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
