@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.accounts.http.AccountStatementClientResponse;
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.Transaction;
-import com.danabijak.demo.banking.entity.TransactionalEntity;
+import com.danabijak.demo.banking.transactions.entity.Transaction;
+import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
 import com.danabijak.demo.banking.transactions.http.TransactionClientResponse;
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 

@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Date;
 
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
 import com.danabijak.demo.banking.users.http.TransactionalEntityClientR;
 
 public class TransactionIntentClientResponse {

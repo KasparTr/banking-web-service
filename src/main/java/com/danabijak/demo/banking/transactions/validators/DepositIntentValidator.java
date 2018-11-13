@@ -1,11 +1,11 @@
-package com.danabijak.demo.banking.validators;
+package com.danabijak.demo.banking.transactions.validators;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.TransactionIntent;
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
 
 public class DepositIntentValidator extends TransactionIntentValidatorImpl {

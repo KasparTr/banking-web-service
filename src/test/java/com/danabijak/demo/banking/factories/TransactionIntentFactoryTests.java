@@ -20,12 +20,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
 import com.danabijak.demo.banking.transactions.factories.TransactionIntentFactory;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.users.services.UserService;
 

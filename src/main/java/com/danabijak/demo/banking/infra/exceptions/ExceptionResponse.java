@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.exceptions;
+package com.danabijak.demo.banking.infra.exceptions;
 
 import java.util.Date;
 

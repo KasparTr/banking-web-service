@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.accounts.exceptions.BankAccountException;
 import com.danabijak.demo.banking.accounts.http.AccountBalanceResponse;
 import com.danabijak.demo.banking.accounts.http.AccountStatementClientResponse;
 import com.danabijak.demo.banking.accounts.repositories.AccountRepository;
 import com.danabijak.demo.banking.accounts.services.AccountService;
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.factories.BankAccountStatementFactory;
 import com.danabijak.demo.banking.users.services.UserService;
 

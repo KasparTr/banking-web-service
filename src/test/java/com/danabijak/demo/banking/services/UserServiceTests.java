@@ -24,14 +24,14 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoT
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.users.entity.Role;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.users.services.UserService;
 import com.danabijak.demo.banking.users.services.UserServiceImpl;
-import com.danabijak.demo.banking.entity.Role;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

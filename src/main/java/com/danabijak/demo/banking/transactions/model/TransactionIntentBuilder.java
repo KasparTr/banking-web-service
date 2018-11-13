@@ -8,9 +8,9 @@ import javax.persistence.OneToOne;
 
 import org.joda.money.Money;
 
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionalEntity;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
 
 public class TransactionIntentBuilder {
 	

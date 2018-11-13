@@ -2,7 +2,7 @@ package com.danabijak.demo.banking.transactions.model;
 
 import java.util.List;
 
-import com.danabijak.demo.banking.entity.Transaction;
+import com.danabijak.demo.banking.transactions.entity.Transaction;
 
 public class AccountTransactions {
 	public final List<Transaction> debitTransactions;

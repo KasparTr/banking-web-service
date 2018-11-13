@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.Role;
-import com.danabijak.demo.banking.entity.User;
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.users.entity.Role;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.factories.UserFactoryImpl;
 
 @RunWith(SpringRunner.class)

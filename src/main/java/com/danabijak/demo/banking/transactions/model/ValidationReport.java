@@ -3,7 +3,7 @@ package com.danabijak.demo.banking.transactions.model;
 import java.util.List;
 import java.util.Optional;
 
-import com.danabijak.demo.banking.exceptions.ReportException;
+import com.danabijak.demo.banking.infra.exceptions.ReportException;
 
 // DTO
 public class ValidationReport {

@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.config;
+package com.danabijak.demo.banking.infra.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

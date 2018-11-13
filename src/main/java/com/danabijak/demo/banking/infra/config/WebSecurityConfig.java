@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.config;
+package com.danabijak.demo.banking.infra.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

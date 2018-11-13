@@ -6,14 +6,14 @@ import javax.annotation.Resource;
 import org.joda.money.Money;
 import org.springframework.stereotype.Service;
 
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.entity.TransactionalEntity;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
-import com.danabijak.demo.banking.validators.TransactionIntentValidator;
-import com.danabijak.demo.banking.validators.WithdrawIntentValidator;
+import com.danabijak.demo.banking.transactions.validators.TransactionIntentValidator;
+import com.danabijak.demo.banking.transactions.validators.WithdrawIntentValidator;
 
 @Service
 @Resource(name="withdrawIntentService")

@@ -15,10 +15,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
-import com.danabijak.demo.banking.validators.UserValidatorServiceImpl;
+import com.danabijak.demo.banking.users.entity.User;
+import com.danabijak.demo.banking.users.validators.UserValidatorServiceImpl;
 
 public class UserValidatorServiceTests {
 	

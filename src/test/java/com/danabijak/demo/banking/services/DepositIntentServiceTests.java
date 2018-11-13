@@ -23,18 +23,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.GlobalMethodsForTesting;
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
 import com.danabijak.demo.banking.transactions.factories.TransactionIntentFactory;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.services.DepositIntentService;
 import com.danabijak.demo.banking.transactions.services.TransactionIntentService;
 import com.danabijak.demo.banking.transactions.services.TransactionIntentServiceImpl;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.services.UserService;
 
 @RunWith(SpringRunner.class)

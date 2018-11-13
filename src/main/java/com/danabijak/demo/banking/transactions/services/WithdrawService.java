@@ -7,10 +7,10 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.accounts.repositories.AccountRepository;
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.Transaction;
-import com.danabijak.demo.banking.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.Transaction;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
 
 @Service

@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.Transaction;
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionalEntity;
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.transactions.entity.Transaction;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 

@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.danabijak.demo.banking.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;

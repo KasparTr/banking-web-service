@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.entity;
+package com.danabijak.demo.banking.infra.entity;
 
 import java.io.Serializable;
 

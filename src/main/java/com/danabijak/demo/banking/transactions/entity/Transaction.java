@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.entity;
+package com.danabijak.demo.banking.transactions.entity;
 
 import java.util.Date;
 
@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import org.joda.money.Money;
+
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
 
 @Entity
 public class Transaction {

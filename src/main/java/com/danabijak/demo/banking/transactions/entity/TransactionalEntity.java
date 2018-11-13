@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.entity;
+package com.danabijak.demo.banking.transactions.entity;
 
 import java.util.Currency;
 import java.util.Locale;
@@ -13,7 +13,9 @@ import javax.persistence.OneToOne;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.accounts.exceptions.BankAccountException;
+import com.danabijak.demo.banking.infra.entity.BaseEntity;
 
 /*
  * TransactionalEntity is any actor in the system who is involved with transactions.

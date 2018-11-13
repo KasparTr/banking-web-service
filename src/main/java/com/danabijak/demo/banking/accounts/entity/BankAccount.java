@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.entity;
+package com.danabijak.demo.banking.accounts.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;

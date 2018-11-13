@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.Transaction;
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.transactions.entity.Transaction;
 import com.danabijak.demo.banking.transactions.http.TransactionClientResponse;
 
 public class AccountStatementClientResponse {

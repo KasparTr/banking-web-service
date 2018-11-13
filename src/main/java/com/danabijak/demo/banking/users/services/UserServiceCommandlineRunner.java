@@ -9,9 +9,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.danabijak.demo.banking.entity.Role;
-import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.users.entity.Role;
+import com.danabijak.demo.banking.users.entity.User;
 
 @Component
 public class UserServiceCommandlineRunner implements CommandLineRunner{

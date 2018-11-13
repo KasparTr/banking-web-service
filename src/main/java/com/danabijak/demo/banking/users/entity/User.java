@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.entity;
+package com.danabijak.demo.banking.users.entity;
 
 import java.util.List;
 
@@ -8,6 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
 
 import javax.persistence.*;
 import java.util.List;

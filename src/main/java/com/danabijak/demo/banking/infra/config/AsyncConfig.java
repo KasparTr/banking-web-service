@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.config;
+package com.danabijak.demo.banking.infra.config;
 
 import java.util.concurrent.Executor;
 

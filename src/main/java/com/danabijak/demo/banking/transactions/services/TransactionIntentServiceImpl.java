@@ -14,18 +14,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.entity.TransactionalEntity;
 import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.services.UserService;
 
 @Service

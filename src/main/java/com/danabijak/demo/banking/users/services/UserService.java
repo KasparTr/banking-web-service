@@ -12,14 +12,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.users.factories.UserFactory;
-import com.danabijak.demo.banking.validators.UserValidatorService;
+import com.danabijak.demo.banking.users.validators.UserValidatorService;
 
 
 @Service

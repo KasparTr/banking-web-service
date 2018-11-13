@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.joda.money.Money;
 
-import com.danabijak.demo.banking.entity.BankAccount;
-import com.danabijak.demo.banking.entity.User;
+import com.danabijak.demo.banking.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.users.entity.User;
 
 public class AccountBalanceResponse {
 	public final String accountName;

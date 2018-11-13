@@ -1,9 +1,10 @@
-package com.danabijak.demo.banking.entity;
+package com.danabijak.demo.banking.users.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.danabijak.demo.banking.infra.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import lombok.AllArgsConstructor;

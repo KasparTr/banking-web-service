@@ -2,7 +2,7 @@ package com.danabijak.demo.banking.users.factories;
 
 import org.springframework.stereotype.Component;
 
-import com.danabijak.demo.banking.entity.User;
+import com.danabijak.demo.banking.users.entity.User;
 
 @Component
 public interface UserFactory {

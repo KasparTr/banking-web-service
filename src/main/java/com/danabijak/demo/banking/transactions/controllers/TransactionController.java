@@ -21,11 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.danabijak.demo.banking.accounts.services.AccountService;
-import com.danabijak.demo.banking.entity.Transaction;
-import com.danabijak.demo.banking.entity.TransactionIntent;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.entity.User;
-import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
+import com.danabijak.demo.banking.transactions.entity.Transaction;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.transactions.factories.TransactionIntentFactory;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientRequest;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
@@ -36,6 +35,7 @@ import com.danabijak.demo.banking.transactions.services.TransactionIntentService
 import com.danabijak.demo.banking.transactions.services.TransactionIntentServiceImpl;
 import com.danabijak.demo.banking.transactions.services.TransactionService;
 import com.danabijak.demo.banking.transactions.services.WithdrawIntentService;
+import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.services.UserService;
 
 @RestController
