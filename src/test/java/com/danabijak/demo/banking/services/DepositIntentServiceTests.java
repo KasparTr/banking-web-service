@@ -76,7 +76,7 @@ public class DepositIntentServiceTests {
 				.amount(Money.of(CurrencyUnit.USD, 123.45))
 				.build();
 		
-		depositIntentService.attemptPublish(validIntent);
+		depositIntentService.publish(validIntent);
 		
 		verify(transactionIntentRepo).save(validIntent); 
 		
@@ -94,7 +94,7 @@ public class DepositIntentServiceTests {
 				.amount(Money.of(CurrencyUnit.USD, 12309133.45))
 				.build();
 		
-		depositIntentService.attemptPublish(invalidIntent);		
+		depositIntentService.publish(invalidIntent);		
 	}
 	
 	@Test
@@ -111,7 +111,7 @@ public class DepositIntentServiceTests {
 				.amount(transactionAmount)
 				.build();
 		
-		depositIntentService.attemptPublish(intent);	
+		depositIntentService.publish(intent);	
 		BigDecimal depoLimitAfter = intent.beneficiary.getLimits().getAllowedDeposit();
 		assertTrue(depoLimitBefore.subtract(transactionAmount.getAmount()).compareTo(depoLimitAfter) == 0);
 	}

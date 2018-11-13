@@ -64,7 +64,7 @@ public class WithdrawIntentServiceTests {
 				.amount(Money.of(CurrencyUnit.USD, 12309133.45))
 				.build();
 		
-		withdrawntentService.attemptPublish(invalidIntent);		
+		withdrawntentService.publish(invalidIntent);		
 	}
 	
 	@Test
@@ -81,7 +81,7 @@ public class WithdrawIntentServiceTests {
 				.amount(transactionAmount)
 				.build();
 		
-		withdrawntentService.attemptPublish(intent);	
+		withdrawntentService.publish(intent);	
 		BigDecimal withdrawLimitAfter = intent.source.getLimits().getAllowedWithdrawal();
 		System.out.println("Withdraw limit before: " + withdrawLimitBefore);
 		System.out.println("transactionAmount: " + transactionAmount.getAmount());

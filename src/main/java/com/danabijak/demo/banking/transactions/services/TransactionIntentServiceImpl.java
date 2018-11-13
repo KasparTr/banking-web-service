@@ -1,6 +1,7 @@
 package com.danabijak.demo.banking.transactions.services;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -29,10 +30,7 @@ import com.danabijak.demo.banking.users.services.UserService;
 @Component
 @Repository
 public abstract class TransactionIntentServiceImpl implements TransactionIntentService{
-	
-	@Autowired
-	private UserService userService;
-	
+
 	@Autowired
 	private TransactionIntentRepository transactionIntentRepo;
 	
@@ -44,39 +42,42 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 		if(validationReport.valid) {
 			transactionIntentRepo.save(intent);
 			reserverParticipantsBalance(intent);
-			return publishToChannel(intent);
+			publishToChannel(intent);
+			CompletableFuture<TransactionIntent> completableFuture  = new CompletableFuture<>();
+			completableFuture.complete(intent);
+			return completableFuture;
 		}else {
 			throw new TransactionIntentPublishException("Transaction intent not publised. Errors: " + validationReport.generateStringMessage());
 		}
 	}
 	
-	@Override
-	@Async("asyncExecutor")
-	public CompletableFuture<TransactionIntent> publishIntent(TransactionClientRequest request) throws TransactionIntentPublishException {
-		
-		CompletableFuture<User> bank = userService.findByUsername("bankItself@bank.com");
-		CompletableFuture<User> user = userService.find(request.entity.id);
-		Money money = Money.of(CurrencyUnit.of(request.money.currency), request.money.amount);
-		
-		CompletableFuture<Void> allUserFutures = CompletableFuture.allOf(bank, user);
-		
-		return allUserFutures.thenApply(it -> {
-		    User bUser = bank.join();
-		    User uUser = user.join();
-		    
-		    TransactionIntent intent = makeTransactionIntent(uUser, bUser, money);
-		    
-		    ValidationReport validationReport = validateIntent(intent);
-			
-			if(validationReport.valid) {
-				transactionIntentRepo.save(intent);
-				reserverParticipantsBalance(intent);
-				return publish(intent);
-			}else {
-				throw new TransactionIntentPublishException("Transaction intent not publised. Errors: " + validationReport.generateStringMessage());
-			}
-		});
-	}
+//	@Override
+//	@Async("asyncExecutor")
+//	public CompletableFuture<TransactionIntent> publishIntent(TransactionClientRequest request) throws TransactionIntentPublishException {
+//		
+//		CompletableFuture<User> bank = userService.findByUsername("bankItself@bank.com");
+//		CompletableFuture<User> user = userService.find(request.entity.id);
+//		Money money = Money.of(CurrencyUnit.of(request.money.currency), request.money.amount);
+//		
+//		CompletableFuture<Void> allUserFutures = CompletableFuture.allOf(bank, user);
+//		
+//		return allUserFutures.thenApply(it -> {
+//		    User bUser = bank.join();
+//		    User uUser = user.join();
+//		    
+//		    TransactionIntent intent = makeTransactionIntent(uUser, bUser, money);
+//		    
+//		    ValidationReport validationReport = validateIntent(intent);
+//			
+//			if(validationReport.valid) {
+//				transactionIntentRepo.save(intent);
+//				reserverParticipantsBalance(intent);
+//				return publish(intent);
+//			}else {
+//				throw new TransactionIntentPublishException("Transaction intent not publised. Errors: " + validationReport.generateStringMessage());
+//			}
+//		});
+//	}
 	
 
 	/**
@@ -84,11 +85,10 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 	 * TODO: Instead of directly sending intent to TransactionSerice for processing, publish the intent to the intent pool and 
 	 * 	have the TransactionService (as a subscriber) process the intents.
 	 */
-	protected CompletableFuture<TransactionIntent> publishToChannel(TransactionIntent intent) {
+	protected void publishToChannel(TransactionIntent intent) {
 		// TODO: Implement publishing to PUB/SUB channel. 
 		// NB! if that fails keep in mind to undo reserver balance/limits!
-
-		return intent;
+		
 	}
 
 	protected abstract TransactionIntent makeTransactionIntent(TransactionalEntity user, TransactionalEntity bank, Money money);

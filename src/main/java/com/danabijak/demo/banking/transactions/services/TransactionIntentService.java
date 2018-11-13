@@ -2,6 +2,7 @@ package com.danabijak.demo.banking.transactions.services;
 
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import javax.transaction.Transactional;
 
@@ -24,14 +25,15 @@ import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;
 public interface TransactionIntentService {
 	
 	/**
-	 * Publish an intent for transaction to the transactions pool.
-	 * @param intent - Intent for a future transaction.
-	 * @return - Report describes the publishing status of the intent.
+	 * Publish transaction intent to the transactions pool if intent is valid.
+	 * Returns a new published intent object that has been changed from the argument intent .
+	 * @param intent - Intent draft for a future transaction.
+	 * @return - Published intent that has been changed from the argument intent
 	 * @throws TransactionIntentPublishException - if something goes horribly wrong here.
 	 */
 	@Async("asyncExecutor")
 	public CompletableFuture<TransactionIntent> publish(TransactionIntent intent) throws TransactionIntentPublishException;
 	
-	@Async("asyncExecutor")
-	public CompletableFuture<TransactionIntent> publishIntent(TransactionClientRequest intentRequest) throws TransactionIntentPublishException;
+	//@Async("asyncExecutor")
+	//public CompletableFuture<TransactionIntent> publishIntent(TransactionClientRequest intentRequest) throws TransactionIntentPublishException;
 }

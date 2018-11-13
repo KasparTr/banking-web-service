@@ -32,6 +32,7 @@ import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.services.DepositIntentService;
 import com.danabijak.demo.banking.transactions.services.TransactionIntentService;
+import com.danabijak.demo.banking.transactions.services.TransactionIntentServiceImpl;
 import com.danabijak.demo.banking.transactions.services.TransactionService;
 import com.danabijak.demo.banking.transactions.services.WithdrawIntentService;
 import com.danabijak.demo.banking.users.services.UserService;
@@ -42,14 +43,19 @@ public class TransactionController {
 	
 	@Autowired
 	@Qualifier("depositIntentService")
-	private DepositIntentService depositIntentService;
+	private TransactionIntentService depositIntentService;
 	
 	@Autowired
 	@Qualifier("withdrawIntentService")
-	private WithdrawIntentService withdrawIntentService;
+	private TransactionIntentService withdrawIntentService;
 	
 	@Autowired
-	private TransactionService transactionService;
+	@Qualifier("withdrawService")
+	private TransactionService withdrawService;
+	
+	@Autowired
+	@Qualifier("depositService")
+	private TransactionService depositService;
 	
 	@Autowired
 	private TransactionIntentFactory transactionIntentFactory;
@@ -58,72 +64,52 @@ public class TransactionController {
 	@GetMapping("/services/transactions/{id}")
 	public Transaction findById(@PathVariable long id){
 		
-		return transactionService.findTransactionBy(id);
+		return depositService.findTransactionBy(id);
 	}
 	
 	
 	//TODO: Enable multiple account support
 	@PostMapping("/services/transactions/deposit")
-	public CompletableFuture<ResponseEntity<TransactionIntentClientResponse>> deposit(@Valid @RequestBody TransactionClientRequest request) {
+	public CompletableFuture<Object> deposit(@Valid @RequestBody TransactionClientRequest request) {
 		
-		CompletableFuture<TransactionIntent> depositIntentFuture = 
+		CompletableFuture<TransactionIntent> intentFuture = 
 				transactionIntentFactory.createDepositIntent(
 						request.entity.id,
 						Money.of(CurrencyUnit.of(request.money.currency), request.money.amount));
 		
-		return depositIntentService.publishIntent(request).thenApply(intent -> {
-			transactionService.porcess(intent);
-			//transactionService.porcessAllIntents();
+		return intentFuture.thenApply(intent -> {	
+			CompletableFuture<TransactionIntent> publishedIntentFuture = depositIntentService.publish(intent);
+			return publishedIntentFuture.thenApply(publishedIntent -> {
+				depositService.porcess(intent);
+				
+				TransactionIntentClientResponse response = new TransactionIntentClientResponse(publishedIntent.isValid(), "Intent Published", publishedIntent);
+				return ResponseEntity.ok(response); 
+			});
 			
-			TransactionIntentClientResponse response = new TransactionIntentClientResponse(intent.isValid(), "Intent Published", intent);
-			return ResponseEntity.ok(response); 
 		});
-//		
-//		CompletableFuture<TransactionIntent> depositIntentFuture = 
-//				transactionIntentFactory.createDepositIntent(
-//						request.entity.id,
-//						Money.of(CurrencyUnit.of(request.money.currency), request.money.amount));
-//				
-//		return depositIntentFuture.thenApply(intent -> {			
-//			System.out.println("TransactionController | depositIntentFuture resolved, intent: " + intent.toString());
-//			TransactionIntent pIntent = depositIntentService.attemptPublish(intent);
-//			System.out.println("TransactionController | intent publised");
-//
-//			// return publishedIntent
-//			// should be end of handler but currently, instead of publishing to channel, we send directly to TransactionService
-//			transactionService.porcess(pIntent);
-//			System.out.println("TransactionController | intent processed");
-//
-//			
-//			TransactionIntentClientResponse response = new TransactionIntentClientResponse(pIntent.isValid(), "Intent Published", pIntent);
-//			return ResponseEntity.ok(response); 
-////		    
-////		    return intent; 
-//			//ResponseEntity<TransactionIntentClientResponse>
-//		});
 
 	}
 	
-//	//TODO: Enable multiple account support
-//	@PostMapping("/services/transactions/withdraw")
-//	public ResponseEntity<TransactionIntentClientResponse> withdraw(@Valid @RequestBody TransactionClientRequest request) {
-//		TransactionIntentFactory factory = new TransactionIntentFactory();
-//		
-//		User bank = userService.findByUsername("bankItself@bank.com");
-//		User user = userService.find(request.entity.id);
-//	
-//		
-//		TransactionIntent intent = factory.create(user, bank, request);		
-//		TransactionIntent publishedIntent = withdrawIntentService.attemptPublish(intent);
-//		
-//		// should be end of it, but right now instead of PUB/SUB we send directly to:
-//		// transactionService.processDeposit(intent)
-//		transactionService.porcess(publishedIntent);
-//		
-//		TransactionIntentClientResponse response = new TransactionIntentClientResponse(publishedIntent.isValid(), "Intent Published", publishedIntent);
-//		return ResponseEntity.ok(response);
-//		
-//	}	
+	//TODO: Enable multiple account support
+	@PostMapping("/services/transactions/withdraw")
+	public CompletableFuture<Object> withdraw(@Valid @RequestBody TransactionClientRequest request) {
+		CompletableFuture<TransactionIntent> intentFuture = 
+				transactionIntentFactory.createWithdrawIntent(
+						request.entity.id,
+						Money.of(CurrencyUnit.of(request.money.currency), request.money.amount));
+		
+		return intentFuture.thenApply(intent -> {	
+			CompletableFuture<TransactionIntent> publishedIntentFuture = withdrawIntentService.publish(intent);
+			return publishedIntentFuture.thenApply(publishedIntent -> {
+				withdrawService.porcess(intent);
+				
+				TransactionIntentClientResponse response = new TransactionIntentClientResponse(publishedIntent.isValid(), "Intent Published", publishedIntent);
+				return ResponseEntity.ok(response); 
+			});
+			
+		});
+		
+	}	
 
 }
 

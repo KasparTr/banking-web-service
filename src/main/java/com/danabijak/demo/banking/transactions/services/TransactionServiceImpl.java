@@ -29,7 +29,7 @@ import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.services.UserService;
 
 @Component
-public class TransactionServiceImpl implements TransactionService{
+public abstract class TransactionServiceImpl implements TransactionService{
 	
 	@Autowired
 	private TransactionRepository transactionRepo;
@@ -52,19 +52,7 @@ public class TransactionServiceImpl implements TransactionService{
 
 	private Transaction process(TransactionIntent intent) throws TransactionServiceException{
 		
-		Optional<BankAccount> sourceAccount = accountRepository.findById(intent.source.getBankAccount().getId());		
-		Optional<BankAccount> beneAccount = accountRepository.findById(intent.beneficiary.getBankAccount().getId());
-		
-		if(sourceAccount.isPresent() && beneAccount.isPresent()) {
-
-			sourceAccount.get().decreaseBalance(intent.amount);
-			beneAccount.get().increaseBalance(intent.amount);
-			
-			accountRepository.save(sourceAccount.get());
-			accountRepository.save(beneAccount.get());
-		}else {
-			throw new TransactionServiceException("Cannot find intendad bank accounts");
-		}
+		updateBalances(intent);
 		
 		Transaction transaction = new Transaction(
 				intent.amount, 
@@ -76,6 +64,8 @@ public class TransactionServiceImpl implements TransactionService{
 		intent.setPaidTo(true);
 		return transaction;
 	}
+	
+	protected abstract void updateBalances(TransactionIntent intent);
 	
 	@Override
 	public Transaction porcess(TransactionIntent intent) throws TransactionServiceException {

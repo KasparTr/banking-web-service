@@ -12,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,7 @@ public class UserController {
 	private UserService userService;
 	
 	@Autowired
+	@Qualifier("withdrawService")
 	private TransactionService transactionService;
 	
 	@Autowired
