@@ -2,17 +2,18 @@
 # Design Decisions & Issues #
 
 This is a simple banking REST Webservice built as a demo application.
+
 See API Description here: https://app.swaggerhub.com/apis/Rubiks/simple-banking-app/1.0 
 
 Paths that implement the functional requirements:
-POST /register                    			← register user
-POST /oauth/token?grant_type=password    	← login (get token)
-GET /services/accounts/{id}/balance        	← get account balance
-GET /services/accounts/{id}/statement       ← get account statement
-POST /services/transactions/withdraw        ← withdraw money
-POST /services/transactions/deposit        	← deposit money
+* POST /register                    			← register user
+* POST /oauth/token?grant_type=password    	← login (get token)
+* GET /services/accounts/{id}/balance        	← get account balance
+* GET /services/accounts/{id}/statement       ← get account statement
+* POST /services/transactions/withdraw        ← withdraw money
+* POST /services/transactions/deposit        	← deposit money
 
-oAuth authentication’s Token Grant method is Basic Auth!
+___oAuth authentication’s Token Grant method is Basic Auth!___
 
 
 ## Issues ##
@@ -49,5 +50,5 @@ _For Example: TransactionController.deposit() method should not process the Tran
 ### TESTING ###
 * Native or Third Party APIs are not unit tested.
 * Running tests launches Spring server making tests slow. Running the server is not always needed.
-* Some tests that mock @Services are not registering stub invokations due to JPA and Mockito integration configuration issues.
-**ToDo: Configure correctly**
+* Some tests that mock Autowired Services  are not registering stub invokations due to JPA and Mockito integration configuration issues.
+	* **ToDo: Configure correctly**
