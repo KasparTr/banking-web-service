@@ -6,18 +6,18 @@ import com.danabijak.demo.banking.users.entity.User;
 
 @Component
 public interface UserFactory {
-	/*
-	 * Changes (makes) the user into a valid transactional banking user
+	/**
+	 * Changes (makes) the user into a valid transactional entity - banking user
 	 */
 	public User makeDefaultBankingUser(User user);
 	
-	/*
-	 * Changes (makes) the user into a valid admin user
+	/**
+	 * Changes (makes) the user into a valid admin user - banking user
 	 */
 	public User makeAdminUser(User user);
 	
-	/*
-	 * Changes (makes) the user into a valid admin user
+	/**
+	 * Changes (makes) the user into a bank entity
 	 */
 	public User makeBankEntity(User user);
 	

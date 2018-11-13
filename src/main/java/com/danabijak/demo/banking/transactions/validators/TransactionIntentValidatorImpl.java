@@ -40,9 +40,7 @@ public abstract class TransactionIntentValidatorImpl implements TransactionInten
 		return report;
 				
 	}
+	
 	protected abstract boolean entityTransactionLimitsAllowFor(TransactionIntent intent);
-
 	protected abstract boolean entityBalanceAllowsFor(TransactionIntent intent);
-
-
 }

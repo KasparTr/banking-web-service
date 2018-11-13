@@ -5,16 +5,13 @@ import java.util.Arrays;
 
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
-import org.joda.money.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.accounts.entity.BankAccount;
-import com.danabijak.demo.banking.accounts.exceptions.BankAccountException;
 import com.danabijak.demo.banking.users.entity.Role;
 import com.danabijak.demo.banking.users.entity.User;
-import com.danabijak.demo.banking.users.services.UserService;
 
 @Component
 public class UserFactoryImpl implements UserFactory {
@@ -26,7 +23,6 @@ public class UserFactoryImpl implements UserFactory {
 	private PasswordEncoder passwordEncoder;
 	
 	
-
 	/*
 	 * Allows to create a default banking user that gets a bank account attached with default starting balance amount.
 	 */

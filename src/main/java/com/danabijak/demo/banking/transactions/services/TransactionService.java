@@ -1,26 +1,29 @@
 package com.danabijak.demo.banking.transactions.services;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import com.danabijak.demo.banking.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.transactions.entity.Transaction;
 import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
-import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 
 @Service
 public interface TransactionService {
 	
+	/**
+	 * Process the intent by looking if intent is valid and then making the balance changes according to the instructions on the intent.
+	 * @param intent
+	 * @return
+	 * @throws TransactionServiceException
+	 */
 	@Async("asyncExecutor")
 	public CompletableFuture<Transaction> porcess(TransactionIntent intent) throws TransactionServiceException;
 	
+	/**
+	 * Process all intents available in the channel by making balance changes according to the instructions on the intent.
+	 * @throws TransactionServiceException
+	 */
 	@Async("asyncExecutor")
 	public void porcessAllIntents() throws TransactionServiceException;
 	

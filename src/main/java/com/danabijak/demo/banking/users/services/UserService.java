@@ -1,25 +1,12 @@
 package com.danabijak.demo.banking.users.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
-import org.jboss.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import com.danabijak.demo.banking.infra.repositories.UserRepository;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.transactions.model.ValidationReport;
 import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
-import com.danabijak.demo.banking.users.factories.UserFactory;
-import com.danabijak.demo.banking.users.validators.UserValidatorService;
 
 
 @Service

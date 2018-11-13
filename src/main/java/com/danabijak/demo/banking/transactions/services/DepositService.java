@@ -22,8 +22,6 @@ public class DepositService extends TransactionServiceImpl{
 	
 	@Override
 	protected void updateBalances(TransactionIntent intent) throws TransactionServiceException{
-
-		//Optional<BankAccount> sourceAccount = accountRepository.findById(intent.source.getBankAccount().getId());		
 		Optional<BankAccount> beneAccount = accountRepository.findById(intent.beneficiary.getBankAccount().getId());
 		
 		if(beneAccount.isPresent()) {

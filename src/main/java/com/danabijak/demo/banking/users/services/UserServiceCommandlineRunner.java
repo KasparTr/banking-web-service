@@ -1,16 +1,10 @@
 package com.danabijak.demo.banking.users.services;
 
-import java.util.Arrays;
-
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import com.danabijak.demo.banking.infra.repositories.UserRepository;
-import com.danabijak.demo.banking.users.entity.Role;
 import com.danabijak.demo.banking.users.entity.User;
 
 @Component

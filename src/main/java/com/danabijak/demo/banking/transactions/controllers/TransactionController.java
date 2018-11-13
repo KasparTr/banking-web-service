@@ -1,9 +1,6 @@
 package com.danabijak.demo.banking.transactions.controllers;
 
-import java.math.BigDecimal;
-import java.net.URI;
-import java.util.Currency;
-import java.util.List;
+
 import java.util.concurrent.CompletableFuture;
 
 import javax.validation.Valid;
@@ -13,30 +10,15 @@ import org.joda.money.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.danabijak.demo.banking.accounts.services.AccountService;
-import com.danabijak.demo.banking.transactions.entity.Transaction;
 import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.transactions.factories.TransactionIntentFactory;
-import com.danabijak.demo.banking.transactions.http.TransactionIntentClientRequest;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;
-import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.transactions.services.DepositIntentService;
 import com.danabijak.demo.banking.transactions.services.TransactionIntentService;
-import com.danabijak.demo.banking.transactions.services.TransactionIntentServiceImpl;
 import com.danabijak.demo.banking.transactions.services.TransactionService;
-import com.danabijak.demo.banking.transactions.services.WithdrawIntentService;
-import com.danabijak.demo.banking.users.entity.User;
-import com.danabijak.demo.banking.users.services.UserService;
 
 @RestController
 public class TransactionController {

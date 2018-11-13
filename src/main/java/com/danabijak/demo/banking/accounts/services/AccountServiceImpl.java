@@ -4,28 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import com.danabijak.demo.banking.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.accounts.exceptions.BankAccountException;
-import com.danabijak.demo.banking.accounts.http.AccountBalanceResponse;
 import com.danabijak.demo.banking.accounts.http.AccountStatementClientResponse;
 import com.danabijak.demo.banking.accounts.repositories.AccountRepository;
 import com.danabijak.demo.banking.infra.repositories.TransactionRepository;
 import com.danabijak.demo.banking.transactions.entity.Transaction;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.transactions.exceptions.TransactionNotFoundException;
-import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
-import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.users.entity.User;
 import com.danabijak.demo.banking.users.factories.BankAccountStatementFactory;
 
 @Service
@@ -63,7 +51,6 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	@Async("asyncExecutor")
 	public  CompletableFuture<List<Transaction>> getDebitTransactionsOf(BankAccount account) throws BankAccountException {
-		// TODO: only return transactions that the id parameter is the source!
 		List<Transaction> allTransactions = transactionRepo.findAll();
 		List<Transaction> accountTransactions = new ArrayList<>();
 		
@@ -79,7 +66,6 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	@Async("asyncExecutor")
 	public CompletableFuture<List<Transaction>> getCreditTransactionsOf(BankAccount account) throws BankAccountException {
-		// TODO: only return transactions that the id parameter is the beneficiary
 		List<Transaction> allTransactions = transactionRepo.findAll();
 		List<Transaction> accountTransactions = new ArrayList<>();
 		

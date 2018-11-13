@@ -1,34 +1,17 @@
 package com.danabijak.demo.banking.transactions.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import com.danabijak.demo.banking.accounts.entity.BankAccount;
-import com.danabijak.demo.banking.accounts.repositories.AccountRepository;
 import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
 import com.danabijak.demo.banking.infra.repositories.TransactionRepository;
 import com.danabijak.demo.banking.transactions.entity.Transaction;
 import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.transactions.entity.TransactionalEntity;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionNotFoundException;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
-import com.danabijak.demo.banking.transactions.model.AccountTransactions;
-import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.users.entity.User;
-import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
-import com.danabijak.demo.banking.users.services.UserService;
 
 @Service
 public abstract class TransactionServiceImpl implements TransactionService{
@@ -38,9 +21,6 @@ public abstract class TransactionServiceImpl implements TransactionService{
 	
 	@Autowired
 	private TransactionIntentRepository transactionIntentRepo;
-	
-	@Autowired
-	private AccountRepository accountRepository;
 	
 	@Override
 	@Async("asyncExecutor")

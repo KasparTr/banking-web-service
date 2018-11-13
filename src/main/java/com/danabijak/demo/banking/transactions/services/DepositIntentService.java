@@ -17,7 +17,6 @@ import com.danabijak.demo.banking.transactions.validators.TransactionIntentValid
 @Service
 @Resource(name="depositIntentService")
 public class DepositIntentService extends TransactionIntentServiceImpl{
-//public class DepositIntentService implements TransactionIntentService{
 
 	@Override
 	protected ValidationReport validateIntent(TransactionIntent intent) {
@@ -30,13 +29,4 @@ public class DepositIntentService extends TransactionIntentServiceImpl{
 		intent.beneficiary.getLimits().decreaseAllowedDeposit(intent.amount.getAmount());
 	}
 	
-	@Override
-	protected TransactionIntent makeTransactionIntent(TransactionalEntity user, TransactionalEntity bank, Money money) {
-		return new TransactionIntentBuilder()
-				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Withdraw"))
-				.source(bank)
-				.beneficiary(user)
-				.amount(money)
-				.build();
-	}
 }
