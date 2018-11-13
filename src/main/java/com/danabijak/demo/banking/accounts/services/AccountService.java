@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.accounts.exceptions.BankAccountException;
 import com.danabijak.demo.banking.accounts.http.AccountStatementClientResponse;
@@ -14,7 +15,7 @@ import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceExce
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 
 
-@Component
+@Service
 public interface AccountService {
 	
 	/**

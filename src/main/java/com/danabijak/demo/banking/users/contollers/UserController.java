@@ -76,7 +76,11 @@ public class UserController {
 	public CompletableFuture<ResponseEntity<UserClientResponse>> createUser(@Valid @RequestBody User user) {
 		CompletableFuture<User> userFuture = userService.insertBanking(user);
 		return userFuture.thenApply(savedUser -> {
-			return ResponseEntity.ok(new UserClientResponse(savedUser.getId(), savedUser.getUsername(), "/oauth/token"));
+			return ResponseEntity.ok(new UserClientResponse(
+					savedUser.getId(), 
+					savedUser.getUsername(), 
+					"/oauth/token",			//TODO: Replce hardcoded link to login with dynamic variable
+					savedUser.getBankAccount().getId()));
 
 		});
 		

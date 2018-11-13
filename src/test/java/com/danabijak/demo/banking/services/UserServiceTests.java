@@ -29,6 +29,7 @@ import com.danabijak.demo.banking.infra.repositories.UserRepository;
 import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.users.services.UserService;
+import com.danabijak.demo.banking.users.services.UserServiceImpl;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
 
@@ -54,7 +55,7 @@ public class UserServiceTests {
 
 	@InjectMocks
 	@Resource
-	private UserService userService;
+	private UserServiceImpl userService;
 	
 	@org.junit.Before
 	public void setUp() throws Exception {

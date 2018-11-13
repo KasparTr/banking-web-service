@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
 			user = userFactory.makeDefaultBankingUser(user);
 			User savedUser = userRepository.save(user);
 			log.info("New User was created: " + savedUser.getId());
-			return CompletableFuture.completedFuture(user);
+			return CompletableFuture.completedFuture(savedUser);
 		}
 		else
 			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());
@@ -54,9 +54,9 @@ public class UserServiceImpl implements UserService{
 		ValidationReport uvr = uvs.validateClientSentUser(user);
 		if(uvr.valid) {
 			user = userFactory.makeAdminUser(user);
-			userRepository.save(user);
-			log.info("New Admin was created: " + user.getId());
-			return CompletableFuture.completedFuture(user);
+			User savedUser = userRepository.save(user);
+			log.info("New Admin was created: " + savedUser.getId());
+			return CompletableFuture.completedFuture(savedUser);
 		}
 		else
 			throw new UserObjectNotValidException("User Object Not Valid. Errors: " + uvr.generateStringMessage());

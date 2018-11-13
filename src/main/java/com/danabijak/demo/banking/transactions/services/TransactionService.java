@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Transaction;
@@ -14,7 +15,7 @@ import com.danabijak.demo.banking.entity.TransactionalEntity;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 
-@Component
+@Service
 public interface TransactionService {
 	
 	@Async("asyncExecutor")

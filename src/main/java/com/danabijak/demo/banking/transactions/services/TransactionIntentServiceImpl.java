@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
@@ -27,8 +28,7 @@ import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.model.ValidationReport;
 import com.danabijak.demo.banking.users.services.UserService;
 
-@Component
-@Repository
+@Service
 public abstract class TransactionIntentServiceImpl implements TransactionIntentService{
 
 	@Autowired

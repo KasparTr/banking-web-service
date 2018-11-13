@@ -64,14 +64,14 @@ public class TransactionController {
 	
 	//TODO: Enable multiple account support
 	@PostMapping("/services/transactions/deposit")
-	public CompletableFuture<Object> deposit(@Valid @RequestBody TransactionClientRequest request) {
+	public CompletableFuture<ResponseEntity<TransactionIntentClientResponse>> deposit(@Valid @RequestBody TransactionClientRequest request) {
 		
 		CompletableFuture<TransactionIntent> intentFuture = 
 				transactionIntentFactory.createDepositIntent(
 						request.entity.id,
 						Money.of(CurrencyUnit.of(request.money.currency), request.money.amount));
 		
-		return intentFuture.thenApply(intent -> {	
+		return intentFuture.thenCompose(intent -> {	
 			CompletableFuture<TransactionIntent> publishedIntentFuture = depositIntentService.publish(intent);
 			return publishedIntentFuture.thenApply(publishedIntent -> {
 				depositService.porcess(intent);
@@ -86,13 +86,13 @@ public class TransactionController {
 	
 	//TODO: Enable multiple account support
 	@PostMapping("/services/transactions/withdraw")
-	public CompletableFuture<Object> withdraw(@Valid @RequestBody TransactionClientRequest request) {
+	public CompletableFuture<ResponseEntity<TransactionIntentClientResponse>> withdraw(@Valid @RequestBody TransactionClientRequest request) {
 		CompletableFuture<TransactionIntent> intentFuture = 
 				transactionIntentFactory.createWithdrawIntent(
 						request.entity.id,
 						Money.of(CurrencyUnit.of(request.money.currency), request.money.amount));
 		
-		return intentFuture.thenApply(intent -> {	
+		return intentFuture.thenCompose(intent -> {	
 			CompletableFuture<TransactionIntent> publishedIntentFuture = withdrawIntentService.publish(intent);
 			return publishedIntentFuture.thenApply(publishedIntent -> {
 				withdrawService.porcess(intent);

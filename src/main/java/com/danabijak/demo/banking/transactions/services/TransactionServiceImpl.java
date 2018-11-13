@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.accounts.repositories.AccountRepository;
 import com.danabijak.demo.banking.entity.BankAccount;
@@ -29,7 +30,7 @@ import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.users.services.UserService;
 
-@Component
+@Service
 public abstract class TransactionServiceImpl implements TransactionService{
 	
 	@Autowired

@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
@@ -21,7 +22,7 @@ import com.danabijak.demo.banking.transactions.model.TransactionClientRequest;
  * @author kaspar
  *
  */
-@Component
+@Service
 public interface TransactionIntentService {
 	
 	/**

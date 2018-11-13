@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.accounts.exceptions.BankAccountException;
 import com.danabijak.demo.banking.accounts.http.AccountBalanceResponse;
@@ -27,7 +28,7 @@ import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.users.factories.BankAccountStatementFactory;
 
-@Component
+@Service
 public class AccountServiceImpl implements AccountService{
 	
 	@Autowired
