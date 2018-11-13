@@ -26,9 +26,7 @@ public class TransactionIntentFactory {
 
 	// TODO: Remove unneeded complexity of CompletableFuture<user> here.
 	@Async("asyncExecutor")
-	public CompletableFuture<TransactionIntent> createDepositIntent(long beneficiaryId, Money money) {
-		System.out.println("TransactionIntentFactory | userService: " + userService);
-		
+	public CompletableFuture<TransactionIntent> createDepositIntent(long beneficiaryId, Money money) {		
 		CompletableFuture<User> bank = userService.findByUsername("bankItself@bank.com");
 		CompletableFuture<User> user = userService.find(beneficiaryId);
 		
@@ -52,9 +50,7 @@ public class TransactionIntentFactory {
 	}
 	
 	@Async("asyncExecutor")
-	public CompletableFuture<TransactionIntent> createWithdrawIntent(long sourceId, Money money) {
-		System.out.println("TransactionIntentFactory | userService: " + userService);
-		
+	public CompletableFuture<TransactionIntent> createWithdrawIntent(long sourceId, Money money) {		
 		CompletableFuture<User> bank = userService.findByUsername("bankItself@bank.com");
 		CompletableFuture<User> user = userService.find(sourceId);
 		

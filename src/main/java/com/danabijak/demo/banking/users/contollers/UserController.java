@@ -56,9 +56,7 @@ public class UserController {
 	
 	@Autowired
 	private AccountService accountService;
-	
-	@Autowired
-	private BankAccountStatementFactory baStatementFactory;
+
 	
 	
 	@GetMapping("/services/users/{id}/account/{accountId}/balance")
@@ -74,29 +72,13 @@ public class UserController {
 		});
 	}
 	
-	@GetMapping("/services/users/{id}/account/{accountId}/statement")
-	public CompletableFuture<ResponseEntity<AccountStatementClientResponse>> getAccountStatement(@PathVariable long id, @PathVariable long accountId){
-		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
-		CompletableFuture<User> userFuture = userService.find(id);
-		
-		return userFuture.thenApply(user -> {
-			// find account. Since currency user only has 1 account a search here is not required.
-			// this account would be used to search for transactions with the transactionService in the future
-			BankAccount correctAccount = user.getBankAccount();
-			
-			AccountStatementClientResponse statement = baStatementFactory.generateStatement(
-					user, 
-					correctAccount, 
-					accountService.getTransactionsOf(correctAccount));
-
-			return ResponseEntity.ok(statement);
-		});
-	}
-	
 	@PostMapping("/register")
-	public ResponseEntity<UserClientResponse> createUser(@Valid @RequestBody User user) {
-		User savedUser = userService.insertBanking(user);
-		return ResponseEntity.ok(new UserClientResponse(savedUser.getId(), savedUser.getUsername(), "/oauth/token"));
+	public CompletableFuture<ResponseEntity<UserClientResponse>> createUser(@Valid @RequestBody User user) {
+		CompletableFuture<User> userFuture = userService.insertBanking(user);
+		return userFuture.thenApply(savedUser -> {
+			return ResponseEntity.ok(new UserClientResponse(savedUser.getId(), savedUser.getUsername(), "/oauth/token"));
+
+		});
 		
 	}
 

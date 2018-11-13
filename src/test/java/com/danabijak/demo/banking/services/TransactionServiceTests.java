@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Resource;
 
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.GlobalMethodsForTesting;
@@ -26,6 +28,7 @@ import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.infra.repositories.TransactionRepository;
 import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
+import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
 import com.danabijak.demo.banking.transactions.services.TransactionServiceImpl;
 
@@ -81,11 +84,16 @@ public class TransactionServiceTests {
 				.build();
 		
 		intent.setIntentAsValid();
-		Transaction transaction = transactionService.porcess(intent);
 		
-		assertTrue(intent.amount.compareTo(transaction.amount) == 0);
-		assertEquals(intent.beneficiary.getBankAccount().getId(), transaction.beneficiaryAccount.getId());
-		assertEquals(intent.source.getBankAccount().getId(), transaction.sourceAccount.getId());
+		transactionService.porcess(intent).thenApply(transaction -> {
+			assertTrue(intent.amount.compareTo(transaction.amount) == 0);
+			assertEquals(intent.beneficiary.getBankAccount().getId(), transaction.beneficiaryAccount.getId());
+			assertEquals(intent.source.getBankAccount().getId(), transaction.sourceAccount.getId());
+			return null;	//to resolve the thenApply
+		});
+		
+		
+		
 	}
 	
 	@Test
@@ -99,8 +107,11 @@ public class TransactionServiceTests {
 				.build();
 		
 		intent.setIntentAsValid();
-		Transaction transaction = transactionService.porcess(intent);
-		verify(transactionRepo).save(Mockito.any(Transaction.class));
+		
+		transactionService.porcess(intent).thenApply(transaction -> {
+			verify(transactionRepo).save(Mockito.any(Transaction.class));
+			return null;	//to resolve the thenApply
+		});
 	}
 	
 	@Test
@@ -116,10 +127,14 @@ public class TransactionServiceTests {
 				.build();
 		
 		intent.setIntentAsValid();
-		Transaction transaction = transactionService.porcess(intent);
 		Money endBalance = sourceUser.getBankAccount().getBalance();
+
+		transactionService.porcess(intent).thenApply(transaction -> {
+			assertTrue(startBalance.minus(money).isEqual(endBalance));
+			return null;	//to resolve the thenApply
+		});
+
 		
-		assertTrue(startBalance.minus(money).isEqual(endBalance));
 	}
 	
 	@Test
@@ -135,9 +150,11 @@ public class TransactionServiceTests {
 				.build();
 		
 		intent.setIntentAsValid();
-		Transaction transaction = transactionService.porcess(intent);
 		Money endBalance = beneficiaryUser.getBankAccount().getBalance();
 		
-		assertTrue(startBalance.plus(money).isEqual(endBalance));
+		transactionService.porcess(intent).thenApply(transaction -> {
+			assertTrue(startBalance.plus(money).isEqual(endBalance));
+			return null;	//to resolve the thenApply
+		});
 	}
 }

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.accounts.repositories.AccountRepository;
@@ -41,6 +42,7 @@ public abstract class TransactionServiceImpl implements TransactionService{
 	private AccountRepository accountRepository;
 	
 	@Override
+	@Async("asyncExecutor")
 	public void porcessAllIntents() throws TransactionServiceException {
 		List<TransactionIntent> allIntents = transactionIntentRepo.findAll();
 		for(TransactionIntent i:allIntents) {
@@ -49,7 +51,41 @@ public abstract class TransactionServiceImpl implements TransactionService{
 			}
 		}
 	}
+		
+	@Override
+	@Async("asyncExecutor")
+	public CompletableFuture<Transaction> porcess(TransactionIntent intent) throws TransactionServiceException {
 
+		try {
+			if(intent.isValid()) {				
+				Transaction transaction = process(intent);
+				CompletableFuture<Transaction> future = new CompletableFuture<>();
+				future.complete(transaction);
+				return future;
+			}else {
+				throw new TransactionServiceException("Transaction intent is not valid. Transaction not made!");
+			}
+		}catch(Exception e) {
+			throw new TransactionServiceException("Cannot process intent, error: " + e.getMessage());
+		}
+		
+	}
+	
+	@Override
+	@Async("asyncExecutor")
+	public CompletableFuture<Transaction> findTransactionBy(long id) throws TransactionNotFoundException {
+		Optional<Transaction> transaction = transactionRepo.findById(id);
+		
+		if(transaction.isPresent()) {
+			CompletableFuture<Transaction> future = new CompletableFuture<>();
+			future.complete(transaction.get());
+			return future;
+		}
+		else 
+			throw new TransactionNotFoundException(String.format("Transaction with ID %s not found", id));
+
+	}
+	
 	private Transaction process(TransactionIntent intent) throws TransactionServiceException{
 		
 		updateBalances(intent);
@@ -66,32 +102,7 @@ public abstract class TransactionServiceImpl implements TransactionService{
 	}
 	
 	protected abstract void updateBalances(TransactionIntent intent);
-	
-	@Override
-	public Transaction porcess(TransactionIntent intent) throws TransactionServiceException {
 
-		try {
-			if(intent.isValid()) {				
-				return process(intent);
-			}else {
-				throw new TransactionServiceException("Transaction intent is not valid. Transaction not made!");
-			}
-		}catch(Exception e) {
-			throw new TransactionServiceException("Cannot process intent, error: " + e.getMessage());
-		}
-		
-	}
-	
-	@Override
-	public Transaction findTransactionBy(long id) throws TransactionNotFoundException {
-		Optional<Transaction> transaction = transactionRepo.findById(id);
-		
-		if(transaction.isPresent())
-			return transaction.get();
-		else 
-			throw new TransactionNotFoundException(String.format("Transaction with ID %s not found", id));
-
-	}
 
 
 }

@@ -16,7 +16,6 @@ import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 public class BankAccountStatementFactory {
 	
 	public AccountStatementClientResponse generateStatement(
-			TransactionalEntity entity, 
 			BankAccount account,
 			AccountTransactions transactions) {
 		
@@ -35,8 +34,7 @@ public class BankAccountStatementFactory {
 		}
 		
 		return new AccountStatementClientResponse(
-				account.getId(), 
-				entity.getName(), 
+				account,
 				transClientResponses,
 				account.getBalance().getAmount());
 

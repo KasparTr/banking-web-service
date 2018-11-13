@@ -2,7 +2,9 @@ package com.danabijak.demo.banking.transactions.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.danabijak.demo.banking.entity.BankAccount;
@@ -14,7 +16,11 @@ import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 
 @Component
 public interface TransactionService {
-	public Transaction porcess(TransactionIntent intent) throws TransactionServiceException;
+	
+	@Async("asyncExecutor")
+	public CompletableFuture<Transaction> porcess(TransactionIntent intent) throws TransactionServiceException;
+	
+	@Async("asyncExecutor")
 	public void porcessAllIntents() throws TransactionServiceException;
 	
 	/**
@@ -23,7 +29,8 @@ public interface TransactionService {
 	 * @return
 	 * @throws TransactionServiceException
 	 */
-	public Transaction findTransactionBy(long id) throws TransactionServiceException;
+	@Async("asyncExecutor")
+	public CompletableFuture<Transaction> findTransactionBy(long id) throws TransactionServiceException;
 
 
 }
