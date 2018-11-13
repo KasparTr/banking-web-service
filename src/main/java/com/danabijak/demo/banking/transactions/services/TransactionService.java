@@ -17,12 +17,13 @@ public interface TransactionService {
 	public Transaction porcess(TransactionIntent intent) throws TransactionServiceException;
 	public void porcessAllIntents() throws TransactionServiceException;
 	
-	
-	public List<Transaction> getDebitTransactionsOf(BankAccount account) throws TransactionServiceException;
-	public List<Transaction> getCreditTransactionsOf(BankAccount account) throws TransactionServiceException;
-	
-	public AccountTransactions getTransactionsOf(BankAccount account) throws TransactionServiceException;
-	
+	/**
+	 * Get specific transaction using transaction id.
+	 * @param id
+	 * @return
+	 * @throws TransactionServiceException
+	 */
 	public Transaction findTransactionBy(long id) throws TransactionServiceException;
+
 
 }

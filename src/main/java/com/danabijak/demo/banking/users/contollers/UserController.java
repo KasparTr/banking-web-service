@@ -30,14 +30,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.hateoas.*;
 
+import com.danabijak.demo.banking.accounts.http.AccountBalanceResponse;
+import com.danabijak.demo.banking.accounts.http.AccountStatementClientResponse;
+import com.danabijak.demo.banking.accounts.services.AccountService;
 import com.danabijak.demo.banking.entity.BankAccount;
 import com.danabijak.demo.banking.entity.Role;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.User;
 import com.danabijak.demo.banking.infra.repositories.UserRepository;
-import com.danabijak.demo.banking.transactions.http.AccountBalanceResponse;
-import com.danabijak.demo.banking.transactions.http.BankAccountStatementClientResponse;
 import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
 import com.danabijak.demo.banking.transactions.model.AccountTransactions;
 import com.danabijak.demo.banking.transactions.services.TransactionService;
@@ -50,15 +51,11 @@ import com.danabijak.demo.banking.users.services.UserService;
 @RestController
 public class UserController {
 	
-//	@Autowired
-//	private UserRepository userRepository;
-	
 	@Autowired
 	private UserService userService;
 	
 	@Autowired
-	@Qualifier("withdrawService")
-	private TransactionService transactionService;
+	private AccountService accountService;
 	
 	@Autowired
 	private BankAccountStatementFactory baStatementFactory;
@@ -75,11 +72,10 @@ public class UserController {
 
 			return ResponseEntity.ok(new AccountBalanceResponse(correctAccount));
 		});
-		
 	}
 	
 	@GetMapping("/services/users/{id}/account/{accountId}/statement")
-	public CompletableFuture<ResponseEntity<BankAccountStatementClientResponse>> getAccountStatement(@PathVariable long id, @PathVariable long accountId){
+	public CompletableFuture<ResponseEntity<AccountStatementClientResponse>> getAccountStatement(@PathVariable long id, @PathVariable long accountId){
 		// IMPLEMENT CHECK FOR TOKEN VS USER ID!!
 		CompletableFuture<User> userFuture = userService.find(id);
 		
@@ -88,10 +84,10 @@ public class UserController {
 			// this account would be used to search for transactions with the transactionService in the future
 			BankAccount correctAccount = user.getBankAccount();
 			
-			BankAccountStatementClientResponse statement = baStatementFactory.generateStatement(
+			AccountStatementClientResponse statement = baStatementFactory.generateStatement(
 					user, 
 					correctAccount, 
-					transactionService.getTransactionsOf(correctAccount));
+					accountService.getTransactionsOf(correctAccount));
 
 			return ResponseEntity.ok(statement);
 		});

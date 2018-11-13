@@ -82,46 +82,6 @@ public abstract class TransactionServiceImpl implements TransactionService{
 		
 	}
 	
-	public AccountTransactions getTransactionsOf(BankAccount account) throws TransactionServiceException {
-		return new AccountTransactions(
-				getDebitTransactionsOf(account),
-				getCreditTransactionsOf(account));
-	}
-	
-	
-	
-	@Override
-	public List<Transaction> getDebitTransactionsOf(BankAccount account) throws TransactionNotFoundException {
-		// TODO: only return transactions that the id parameter is the source!
-		List<Transaction> allTransactions = transactionRepo.findAll();
-		List<Transaction> accountTransactions = new ArrayList<>();
-		
-		//TODO: Change this loop for smarter Repository find method!
-		for(Transaction trans:allTransactions) {
-			if(trans.sourceAccount.getId() == account.getId()) {
-				accountTransactions.add(trans);
-			}
-		}
-
-		return accountTransactions;
-	}
-	
-	@Override
-	public List<Transaction> getCreditTransactionsOf(BankAccount account) throws TransactionNotFoundException {
-		// TODO: only return transactions that the id parameter is the beneficiary
-		List<Transaction> allTransactions = transactionRepo.findAll();
-		List<Transaction> accountTransactions = new ArrayList<>();
-		
-		//TODO: Change this loop for smarter Repository find method!
-		for(Transaction trans:allTransactions) {
-			if(trans.beneficiaryAccount.getId() == account.getId()) {
-				accountTransactions.add(trans);
-			}
-		}
-		
-		return accountTransactions;
-	}
-
 	@Override
 	public Transaction findTransactionBy(long id) throws TransactionNotFoundException {
 		Optional<Transaction> transaction = transactionRepo.findById(id);
@@ -133,8 +93,5 @@ public abstract class TransactionServiceImpl implements TransactionService{
 
 	}
 
-
-	
-	
 
 }

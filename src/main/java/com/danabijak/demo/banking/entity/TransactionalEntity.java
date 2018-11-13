@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
-import com.danabijak.demo.banking.transactions.exceptions.BankAccountException;
+import com.danabijak.demo.banking.accounts.exceptions.BankAccountException;
 
 /*
  * TransactionalEntity is any actor in the system who is involved with transactions.

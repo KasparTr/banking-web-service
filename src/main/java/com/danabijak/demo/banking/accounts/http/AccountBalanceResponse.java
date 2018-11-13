@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.transactions.http;
+package com.danabijak.demo.banking.accounts.http;
 
 import java.math.BigDecimal;
 

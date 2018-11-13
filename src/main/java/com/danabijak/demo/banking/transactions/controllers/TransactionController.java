@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.danabijak.demo.banking.accounts.services.AccountService;
 import com.danabijak.demo.banking.entity.Transaction;
 import com.danabijak.demo.banking.entity.TransactionIntent;
 import com.danabijak.demo.banking.entity.TransactionIntentStatus;
@@ -59,14 +60,7 @@ public class TransactionController {
 	
 	@Autowired
 	private TransactionIntentFactory transactionIntentFactory;
-	
-
-	@GetMapping("/services/transactions/{id}")
-	public Transaction findById(@PathVariable long id){
 		
-		return depositService.findTransactionBy(id);
-	}
-	
 	
 	//TODO: Enable multiple account support
 	@PostMapping("/services/transactions/deposit")
