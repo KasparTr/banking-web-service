@@ -21,6 +21,7 @@ The following are the known issues that either introduce bugs or deviate from th
 Here are also features that have not been fully implemented yet to fully follow the architecture described in chapter 2 of this document. 
 
 ### ARCHITECTURAL ###
+* Error responses are standardized, but sucess responses are not yet. 
 * Currently the transaction controller manage the transaction request, create a TransactionIntent  and pass it to TransactionService for direct processing. Instead they should just publish the intent to a channel from where a subscriber (TransactionService) would pick it up for processing. 
 
 **Note**: Full PUB/SUB pattern is not yet implemented so the TransactionService.process() is called in the controller itself. All interfaces and controllers are ready for intergration with a PUB/SUB channel and separate (microsevice architecture) deployment. 
