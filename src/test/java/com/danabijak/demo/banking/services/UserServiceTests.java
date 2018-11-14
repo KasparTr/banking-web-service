@@ -24,14 +24,15 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoT
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.danabijak.demo.banking.infra.repositories.UserRepository;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.users.entity.Role;
-import com.danabijak.demo.banking.users.entity.User;
-import com.danabijak.demo.banking.users.exceptions.UserNotFoundException;
-import com.danabijak.demo.banking.users.exceptions.UserObjectNotValidException;
-import com.danabijak.demo.banking.users.services.UserService;
-import com.danabijak.demo.banking.users.services.UserServiceImpl;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.domain.users.entity.Role;
+import com.danabijak.demo.banking.domain.users.entity.User;
+import com.danabijak.demo.banking.domain.users.exceptions.UserNotFoundException;
+import com.danabijak.demo.banking.domain.users.exceptions.UserObjectNotValidException;
+import com.danabijak.demo.banking.domain.users.repositories.UserRepository;
+import com.danabijak.demo.banking.domain.users.services.UserService;
+import com.danabijak.demo.banking.domain.users.services.UserServiceImpl;
+import com.danabijak.demo.banking.domain.users.valueobjects.UserRequest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -74,23 +75,27 @@ public class UserServiceTests {
 	
 	@Test(expected = UserObjectNotValidException.class)
 	public void testInsertBanking_throw_user_object_faulty() {
-		User testUser = new User(FAULTY_USERNAME_EXAMPLE, FAULTY_PASSWORD_EXAMPLE);
-		userService.insertBanking(testUser);
+		UserRequest userRequest = new UserRequest(FAULTY_USERNAME_EXAMPLE, FAULTY_PASSWORD_EXAMPLE);
+		userService.insertBanking(userRequest);
 	}
 	
 	@Test
 	public void testInsertBanking_repo_is_invoked() {
-		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		userService.insertBanking(testUser);
-		verify(userRepository).save(testUser); 
+		UserRequest userRequest = new UserRequest(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+		userService.insertBanking(userRequest).thenApply(testUser -> {
+			verify(userRepository).save(testUser); 
+			return null;	//to resolve the thenApply
+		});
 	}
 	
 	
 	@Test
 	public void testInsertAdmin_repo_is_invoked() {
-		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		userService.insertAdmin(testUser);
-		verify(userRepository).save(testUser); 
+		UserRequest userRequest = new UserRequest(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+		userService.insertAdmin(userRequest).thenApply(testUser -> {
+			verify(userRepository).save(testUser); 
+			return null;	//to resolve the thenApply
+		});
 	}
 
 	

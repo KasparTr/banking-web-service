@@ -14,10 +14,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.danabijak.demo.banking.infra.repositories.UserRepository;
-import com.danabijak.demo.banking.users.entity.Role;
-import com.danabijak.demo.banking.users.entity.User;
-import com.danabijak.demo.banking.users.services.UserService;
+import com.danabijak.demo.banking.domain.users.entity.Role;
+import com.danabijak.demo.banking.domain.users.entity.User;
+import com.danabijak.demo.banking.domain.users.repositories.UserRepository;
+import com.danabijak.demo.banking.domain.users.services.UserService;
 
 @SpringBootApplication
 public class DemoApplication {

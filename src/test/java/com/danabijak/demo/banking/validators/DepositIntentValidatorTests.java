@@ -18,18 +18,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.GlobalMethodsForTesting;
-import com.danabijak.demo.banking.accounts.entity.BankAccount;
-import com.danabijak.demo.banking.infra.repositories.TransactionIntentRepository;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.transactions.exceptions.TransactionIntentPublishException;
-import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.transactions.model.ValidationReport;
-import com.danabijak.demo.banking.transactions.services.DepositIntentService;
-import com.danabijak.demo.banking.transactions.validators.DepositIntentValidator;
-import com.danabijak.demo.banking.transactions.validators.TransactionIntentValidator;
-import com.danabijak.demo.banking.users.entity.User;
+import com.danabijak.demo.banking.core.ValidationReport;
+import com.danabijak.demo.banking.domain.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentBuilder;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
+import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentPublishException;
+import com.danabijak.demo.banking.domain.transactions.repositories.TransactionIntentRepository;
+import com.danabijak.demo.banking.domain.transactions.services.DepositIntentService;
+import com.danabijak.demo.banking.domain.transactions.validators.DepositIntentValidator;
+import com.danabijak.demo.banking.domain.transactions.validators.TransactionIntentValidator;
+import com.danabijak.demo.banking.domain.users.entity.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

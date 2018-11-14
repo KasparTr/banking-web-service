@@ -21,13 +21,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.danabijak.demo.banking.accounts.entity.BankAccount;
-import com.danabijak.demo.banking.accounts.services.AccountService;
-import com.danabijak.demo.banking.accounts.services.AccountServiceImpl;
-import com.danabijak.demo.banking.infra.repositories.TransactionRepository;
-import com.danabijak.demo.banking.transactions.entity.Transaction;
-import com.danabijak.demo.banking.transactions.services.TransactionServiceImpl;
-import com.danabijak.demo.banking.users.entity.User;
+import com.danabijak.demo.banking.domain.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.domain.accounts.services.AccountService;
+import com.danabijak.demo.banking.domain.accounts.services.AccountServiceImpl;
+import com.danabijak.demo.banking.domain.transactions.entity.Transaction;
+import com.danabijak.demo.banking.domain.transactions.repositories.TransactionRepository;
+import com.danabijak.demo.banking.domain.transactions.services.TransactionServiceImpl;
+import com.danabijak.demo.banking.domain.users.entity.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

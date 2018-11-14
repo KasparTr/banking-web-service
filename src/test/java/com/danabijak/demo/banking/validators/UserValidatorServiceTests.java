@@ -15,10 +15,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.danabijak.demo.banking.infra.repositories.UserRepository;
-import com.danabijak.demo.banking.transactions.model.ValidationReport;
-import com.danabijak.demo.banking.users.entity.User;
-import com.danabijak.demo.banking.users.validators.UserValidatorServiceImpl;
+import com.danabijak.demo.banking.core.ValidationReport;
+import com.danabijak.demo.banking.domain.users.entity.User;
+import com.danabijak.demo.banking.domain.users.repositories.UserRepository;
+import com.danabijak.demo.banking.domain.users.validators.UserValidatorServiceImpl;
+import com.danabijak.demo.banking.domain.users.valueobjects.UserRequest;
 
 public class UserValidatorServiceTests {
 	
@@ -77,13 +78,13 @@ public class UserValidatorServiceTests {
 
 	@Test
 	public void testIsUserTaken_taken_username(){
-		User user = new User(EXISTING_USERNAME, "fpa23Fdss@sdSF3");
+		UserRequest user = new UserRequest(EXISTING_USERNAME, "fpa23Fdss@sdSF3");
 		assertTrue( uvs.isUserTaken(user));
 	}
 	
 	@Test
 	public void testIsUserTaken_available_username(){
-		User user = new User(NOT_FOUND_USERNAME, "fpa23Fdss@sdSF3");
+		UserRequest user = new UserRequest(NOT_FOUND_USERNAME, "fpa23Fdss@sdSF3");
 		assertFalse( uvs.isUserTaken(user));
 	}
 

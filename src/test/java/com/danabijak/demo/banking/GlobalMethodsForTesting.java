@@ -2,8 +2,8 @@ package com.danabijak.demo.banking;
 
 import java.math.BigDecimal;
 
-import com.danabijak.demo.banking.accounts.entity.BankAccount;
-import com.danabijak.demo.banking.users.entity.User;
+import com.danabijak.demo.banking.domain.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.domain.users.entity.User;
 
 public class GlobalMethodsForTesting {
 	public static String VALID_USERNAME_EXAMPLE = "test@email.com";

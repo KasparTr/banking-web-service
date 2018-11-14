@@ -21,16 +21,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.GlobalMethodsForTesting;
-import com.danabijak.demo.banking.infra.repositories.TransactionRepository;
-import com.danabijak.demo.banking.transactions.entity.Transaction;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.transactions.exceptions.TransactionServiceException;
-import com.danabijak.demo.banking.transactions.http.TransactionIntentClientResponse;
-import com.danabijak.demo.banking.transactions.model.TransactionIntentBuilder;
-import com.danabijak.demo.banking.transactions.services.TransactionServiceImpl;
-import com.danabijak.demo.banking.users.entity.User;
+import com.danabijak.demo.banking.domain.transactions.entity.Transaction;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentBuilder;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus;
+import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
+import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionServiceException;
+import com.danabijak.demo.banking.domain.transactions.repositories.TransactionRepository;
+import com.danabijak.demo.banking.domain.transactions.services.TransactionServiceImpl;
+import com.danabijak.demo.banking.domain.transactions.valueobjects.TransactionIntentResponse;
+import com.danabijak.demo.banking.domain.users.entity.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

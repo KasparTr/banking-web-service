@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.danabijak.demo.banking.accounts.entity.BankAccount;
-import com.danabijak.demo.banking.users.entity.Role;
-import com.danabijak.demo.banking.users.entity.User;
-import com.danabijak.demo.banking.users.factories.UserFactoryImpl;
+import com.danabijak.demo.banking.domain.accounts.entity.BankAccount;
+import com.danabijak.demo.banking.domain.users.entity.Role;
+import com.danabijak.demo.banking.domain.users.entity.User;
+import com.danabijak.demo.banking.domain.users.factories.UserFactoryImpl;
+import com.danabijak.demo.banking.domain.users.valueobjects.UserRequest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,16 +31,16 @@ public class UserFactoryImplTests {
 	
 	@Test
 	public void testMakeDefaultBankingUser_user_is_active() {
-		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		userFactory.makeDefaultBankingUser(testUser);
+		UserRequest userRequest = new UserRequest(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+		User testUser = userFactory.makeDefaultBankingUser(userRequest);
 
 		assertTrue(testUser.isActive());
 	}
 	
 	@Test
 	public void testMakeDefaultBankingUser_user_balance_is_default() {
-		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		userFactory.makeDefaultBankingUser(testUser);
+		UserRequest userRequest = new UserRequest(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+		User testUser = userFactory.makeDefaultBankingUser(userRequest);
 		BigDecimal userBalance = testUser.getBankAccount().getBalance().getAmount();
 
 		assertEquals(0, userBalance.compareTo(BankAccount.DEFAULT_LIMITS.BANKING_USER_START_BALANCE));
@@ -47,8 +48,8 @@ public class UserFactoryImplTests {
 	
 	@Test
 	public void testMakeAdminUser_user_role_includes_admin() {
-		User testUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		userFactory.makeAdminUser(testUser);
+		UserRequest userRequest = new UserRequest(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+		User testUser = userFactory.makeAdminUser(userRequest);
 		boolean adminRoleFound = false;
 		for(Role role : testUser.getRoles()) {
 			if(role.getName() == Role.NAME.ADMIN) adminRoleFound = true;
