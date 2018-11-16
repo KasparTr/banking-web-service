@@ -57,7 +57,7 @@ public class TransactionController {
 		return intentFuture.thenCompose(intent -> {	
 			CompletableFuture<TransactionIntent> publishedIntentFuture = depositIntentService.publish(intent);
 			return publishedIntentFuture.thenApply(publishedIntent -> {
-				depositService.porcess(intent);
+				depositService.process(intent);
 				
 				TransactionIntentResponse response = new TransactionIntentResponse(publishedIntent.isValid(), "Intent Published", publishedIntent);
 				return ResponseEntity.ok(response); 
@@ -78,7 +78,7 @@ public class TransactionController {
 		return intentFuture.thenCompose(intent -> {	
 			CompletableFuture<TransactionIntent> publishedIntentFuture = withdrawIntentService.publish(intent);
 			return publishedIntentFuture.thenApply(publishedIntent -> {
-				withdrawService.porcess(intent);
+				withdrawService.process(intent);
 				
 				TransactionIntentResponse response = new TransactionIntentResponse(publishedIntent.isValid(), "Intent Published", publishedIntent);
 				return ResponseEntity.ok(response); 

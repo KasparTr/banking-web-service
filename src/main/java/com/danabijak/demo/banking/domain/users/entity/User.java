@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
+
+//@NoArgsConstructor
+//@AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@Entity
 public class User extends TransactionalEntity{
 	
     private String username;

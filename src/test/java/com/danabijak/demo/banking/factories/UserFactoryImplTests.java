@@ -17,8 +17,7 @@ import com.danabijak.demo.banking.domain.users.entity.User;
 import com.danabijak.demo.banking.domain.users.factories.UserFactoryImpl;
 import com.danabijak.demo.banking.domain.users.valueobjects.UserRequest;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class UserFactoryImplTests {
 	private static String FAULTY_USERNAME_EXAMPLE = "test";
 	private static String VALID_USERNAME_EXAMPLE = "test@email.com";
@@ -26,8 +25,7 @@ public class UserFactoryImplTests {
 	private static String FAULTY_PASSWORD_EXAMPLE = "1234";
 	private static String VALID_PASSWORD_EXAMPLE = "pAS24@a3asd2KSH";
 	
-	@Autowired
-	private UserFactoryImpl userFactory;
+	private UserFactoryImpl userFactory = new UserFactoryImpl();
 	
 	@Test
 	public void testMakeDefaultBankingUser_user_is_active() {

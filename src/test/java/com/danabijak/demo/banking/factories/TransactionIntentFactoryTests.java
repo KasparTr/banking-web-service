@@ -29,8 +29,7 @@ import com.danabijak.demo.banking.domain.users.exceptions.UserObjectNotValidExce
 import com.danabijak.demo.banking.domain.users.repositories.UserRepository;
 import com.danabijak.demo.banking.domain.users.services.UserService;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class TransactionIntentFactoryTests {
 	
 	// Not using BeforeClass here because static methods don't work with @Autowired
@@ -49,22 +48,18 @@ public class TransactionIntentFactoryTests {
 	private UserService userService;
 
 	@InjectMocks
-	@Resource
-	private TransactionIntentFactory transactionIntentFactory;
+	private TransactionIntentFactory transactionIntentFactory = new TransactionIntentFactory();
 	
 	@org.junit.Before
 	public void setUp() throws Exception {
-		if(!setUpIsDone) {
-			// Initialize mocks created above
-		    MockitoAnnotations.initMocks(this);
-		    
-		    // Change Mocks behavior for user queries
-		    User nUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
-		    CompletableFuture<User> uFuture = new CompletableFuture<User>();
-		    uFuture.complete(nUser);
-		    when(userService.find(EXISTING_USER_ID)).thenReturn(uFuture);
-		    setUpIsDone = true;
-		}
+		// Initialize mocks created above
+	    MockitoAnnotations.initMocks(this);
+	    
+	    // Change Mocks behavior for user queries
+	    User nUser = new User(VALID_USERNAME_EXAMPLE, VALID_PASSWORD_EXAMPLE);
+	    CompletableFuture<User> uFuture = new CompletableFuture<User>();
+	    uFuture.complete(nUser);
+	    when(userService.find(EXISTING_USER_ID)).thenReturn(uFuture);
 	}
 	
 	@Test

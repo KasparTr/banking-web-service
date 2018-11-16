@@ -1,4 +1,4 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.domain.accounts.services;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -8,36 +8,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
-import javax.annotation.Resource;
-
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.domain.accounts.entity.BankAccount;
-import com.danabijak.demo.banking.domain.accounts.services.AccountService;
+import com.danabijak.demo.banking.domain.accounts.exceptions.BankAccountException;
+import com.danabijak.demo.banking.domain.accounts.repositories.AccountRepository;
 import com.danabijak.demo.banking.domain.accounts.services.AccountServiceImpl;
 import com.danabijak.demo.banking.domain.transactions.entity.Transaction;
 import com.danabijak.demo.banking.domain.transactions.repositories.TransactionRepository;
-import com.danabijak.demo.banking.domain.transactions.services.TransactionServiceImpl;
-import com.danabijak.demo.banking.domain.users.entity.User;
+import com.danabijak.demo.banking.domain.users.factories.BankAccountStatementFactory;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class AccountServiceTests {
-	
-	// Not using BeforeClass here because static methods don't work with @Autowired
-	private static boolean setUpIsDone = false;
-		
+			
 	private static String QUERY_ACCOUNT_NAME = "test@email.com";
 	private static String OTHER_ACCOUNT_NAME = "test@email.com";
+	private static long BANK_ACCOUNT_ID_NON_EXISTING= -124512;
+	private static long BANK_ACCOUNT_ID_EXISTING= 12;
+
 	
 	private BankAccount testAccountToQueryWith = new BankAccount(CurrencyUnit.USD, QUERY_ACCOUNT_NAME);
 	private BankAccount otherAccount = new BankAccount(CurrencyUnit.USD, OTHER_ACCOUNT_NAME);
@@ -45,17 +37,20 @@ public class AccountServiceTests {
 
 	@Mock
 	private TransactionRepository transactionRepo;
+	@Mock
+	private AccountRepository accountRepository;
+	@Mock
+	private BankAccountStatementFactory baStatementFactory;
 	
 	@InjectMocks
-	@Resource
-	private AccountServiceImpl accountService;
-	
+	AccountServiceImpl accountService = new AccountServiceImpl();
+
 	@org.junit.Before
 	public void setUp() throws Exception {
 		// Initialize mocks created above
 	    MockitoAnnotations.initMocks(this);
 	    
-	 // Change Mocks behavior for user queries
+	    // Change Mocks behavior for user queries
 	    List<Transaction> allKindsOfTransactions = new ArrayList<>();
 	    allKindsOfTransactions.add(new Transaction(money, testAccountToQueryWith, otherAccount, "Test"));
 	    allKindsOfTransactions.add(new Transaction(money, testAccountToQueryWith, otherAccount, "Test"));
@@ -63,13 +58,13 @@ public class AccountServiceTests {
 	    allKindsOfTransactions.add(new Transaction(money, otherAccount, testAccountToQueryWith, "Test"));
 	    when(transactionRepo.findAll()).thenReturn(allKindsOfTransactions);
 	    
+	    BankAccount existingBankAccount = new BankAccount(CurrencyUnit.USD, OTHER_ACCOUNT_NAME);
+	    when(accountRepository.findById(BANK_ACCOUNT_ID_EXISTING)).thenReturn(Optional.of(existingBankAccount));
 	}
 	
 	@Test
 	public void testGetDebitTransactionsOf_all_transactions_are_debit() {
-		CompletableFuture<List<Transaction>> transFuture = accountService.getDebitTransactionsOf(testAccountToQueryWith);
-		
-		transFuture.thenApply(transactions ->{
+		accountService.getDebitTransactionsOf(testAccountToQueryWith).thenApply(transactions ->{
 			for(Transaction t:transactions) {
 				if(t.sourceAccount.getId() != testAccountToQueryWith.getId()) fail(
 						"Transaction found where source (benefactor) account was not the account whose debit transactions were queried");
@@ -79,10 +74,8 @@ public class AccountServiceTests {
 	}
 	
 	@Test
-	public void testGetDebitTransactionsOf_all_transactions_are_credit() {
-		CompletableFuture<List<Transaction>> transFuture = accountService.getDebitTransactionsOf(testAccountToQueryWith);
-		
-		transFuture.thenApply(transactions ->{
+	public void testGetCreditTransactionsOf_all_transactions_are_credit() {
+		accountService.getCreditTransactionsOf(testAccountToQueryWith).thenApply(transactions ->{
 			for(Transaction t:transactions) {
 				if(t.beneficiaryAccount.getId() != testAccountToQueryWith.getId()) {
 					System.out.println("AccountServiceTest | testGetDebitTransactionsOf_all_transactions_are_credit | credit trans found!");
@@ -94,4 +87,20 @@ public class AccountServiceTests {
 		});
 	}
 
+	
+	@Test(expected = BankAccountException.class)
+	public void testGetBankAccount_thow_if_no_bank_account_found() {
+		accountService.getBankAccount(BANK_ACCOUNT_ID_NON_EXISTING);
+	}
+
+	@Test
+	public void testGetBankAccount_return_correct_account() {
+		accountService.getBankAccount(BANK_ACCOUNT_ID_EXISTING).thenApply(account ->{
+			if(account.getId() != BANK_ACCOUNT_ID_EXISTING)fail();
+			return null;
+		});
+	}
+	
+	
+	
 }

@@ -19,7 +19,7 @@ public interface TransactionService {
 	 * @throws TransactionServiceException
 	 */
 	@Async("asyncExecutor")
-	public CompletableFuture<Transaction> porcess(TransactionIntent intent) throws TransactionServiceException;
+	public CompletableFuture<Transaction> process(TransactionIntent intent) throws TransactionServiceException;
 	
 	/**
 	 * Process all intents available in the channel by making balance changes according to the instructions on the intent.

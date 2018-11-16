@@ -29,26 +29,18 @@ import com.danabijak.demo.banking.domain.transactions.services.DepositIntentServ
 import com.danabijak.demo.banking.domain.transactions.services.WithdrawIntentService;
 import com.danabijak.demo.banking.domain.users.entity.User;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class WithdrawIntentServiceTests {
-	// Not using BeforeClass here because static methods don't work with @Autowired
-	private static boolean setUpIsDone = false;
 	
 	@Mock
 	private TransactionIntentRepository transactionIntentRepo;
 
 	@InjectMocks
-	@Resource
-	private WithdrawIntentService withdrawntentService;
+	private WithdrawIntentService withdrawntentService = new WithdrawIntentService();
 	
 	@org.junit.Before
 	public void setUp() throws Exception {
-		if(!setUpIsDone) {
-			// Initialize mocks created above
-		    MockitoAnnotations.initMocks(this);
-		    setUpIsDone = true;
-		}
+		// Initialize mocks created above
+	    MockitoAnnotations.initMocks(this);
 	}
 
 	

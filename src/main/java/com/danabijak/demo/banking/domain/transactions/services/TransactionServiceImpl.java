@@ -29,18 +29,18 @@ public abstract class TransactionServiceImpl implements TransactionService{
 		List<TransactionIntent> allIntents = transactionIntentRepo.findAll();
 		for(TransactionIntent i:allIntents) {
 			if(!i.isPaid()) {
-				process(i);
+				processIntent(i);
 			}
 		}
 	}
 		
 	@Override
 	@Async("asyncExecutor")
-	public CompletableFuture<Transaction> porcess(TransactionIntent intent) throws TransactionServiceException {
-
+	public CompletableFuture<Transaction> process(TransactionIntent intent) throws TransactionServiceException {
+		System.out.println("TransactionServiceImp | processing intent: " + intent.toString());
 		try {
 			if(intent.isValid()) {				
-				Transaction transaction = process(intent);
+				Transaction transaction = processIntent(intent);
 				CompletableFuture<Transaction> future = new CompletableFuture<>();
 				future.complete(transaction);
 				return future;
@@ -48,6 +48,8 @@ public abstract class TransactionServiceImpl implements TransactionService{
 				throw new TransactionServiceException("Transaction intent is not valid. Transaction not made!");
 			}
 		}catch(Exception e) {
+			System.out.println("TransactionServiceImp | processing | error: " + e.getMessage());
+
 			throw new TransactionServiceException("Cannot process intent, error: " + e.getMessage());
 		}
 		
@@ -68,7 +70,7 @@ public abstract class TransactionServiceImpl implements TransactionService{
 
 	}
 	
-	private Transaction process(TransactionIntent intent) throws TransactionServiceException{
+	private Transaction processIntent(TransactionIntent intent) throws TransactionServiceException{
 		
 		updateBalances(intent);
 		
@@ -77,6 +79,8 @@ public abstract class TransactionServiceImpl implements TransactionService{
 				intent.beneficiary.getBankAccount(), 
 				intent.source.getBankAccount(), 
 				"Successfully made transaction");
+		
+		System.out.println("transactionRepo: " + transactionRepo);
 		
 		transactionRepo.save(transaction);
 		intent.setPaidTo(true);

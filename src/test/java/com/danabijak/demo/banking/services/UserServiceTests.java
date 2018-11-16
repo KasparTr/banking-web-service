@@ -1,8 +1,6 @@
 package com.danabijak.demo.banking.services;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -11,35 +9,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-
-import javax.annotation.Resource;
-
-import org.aspectj.lang.annotation.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus;
-import com.danabijak.demo.banking.domain.users.entity.Role;
 import com.danabijak.demo.banking.domain.users.entity.User;
 import com.danabijak.demo.banking.domain.users.exceptions.UserNotFoundException;
 import com.danabijak.demo.banking.domain.users.exceptions.UserObjectNotValidException;
 import com.danabijak.demo.banking.domain.users.repositories.UserRepository;
-import com.danabijak.demo.banking.domain.users.services.UserService;
 import com.danabijak.demo.banking.domain.users.services.UserServiceImpl;
 import com.danabijak.demo.banking.domain.users.valueobjects.UserRequest;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class UserServiceTests {
 	
-	// Not using BeforeClass here because static methods don't work with @Autowired
-	private static boolean setUpIsDone = false;
 	
 	private static long EXISTING_USER_ID = 2000;
 	private static long NON_EXISTING_USER_ID = 4040;
@@ -55,8 +37,7 @@ public class UserServiceTests {
 	private UserRepository userRepository;
 
 	@InjectMocks
-	@Resource
-	private UserServiceImpl userService;
+	private UserServiceImpl userService = new UserServiceImpl();
 	
 	@org.junit.Before
 	public void setUp() throws Exception {

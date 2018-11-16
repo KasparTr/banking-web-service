@@ -2,65 +2,38 @@ package com.danabijak.demo.banking.services;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
-import javax.annotation.Resource;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.danabijak.demo.banking.GlobalMethodsForTesting;
-import com.danabijak.demo.banking.domain.accounts.entity.BankAccount;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentBuilder;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
 import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentPublishException;
-import com.danabijak.demo.banking.domain.transactions.factories.TransactionIntentFactory;
 import com.danabijak.demo.banking.domain.transactions.repositories.TransactionIntentRepository;
 import com.danabijak.demo.banking.domain.transactions.services.DepositIntentService;
-import com.danabijak.demo.banking.domain.transactions.services.TransactionIntentService;
-import com.danabijak.demo.banking.domain.transactions.services.TransactionIntentServiceImpl;
 import com.danabijak.demo.banking.domain.users.entity.User;
-import com.danabijak.demo.banking.domain.users.services.UserService;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class DepositIntentServiceTests {
-	
-	// Not using BeforeClass here because static methods don't work with @Autowired
-	private static boolean setUpIsDone = false;
-	
-	
 	
 	@Mock
 	private TransactionIntentRepository transactionIntentRepo;
 
 	@InjectMocks
-	@Resource
-	private DepositIntentService depositIntentService;
+	private DepositIntentService depositIntentService = new DepositIntentService();
 	
 	@org.junit.Before
 	public void setUp() throws Exception {
-		if(!setUpIsDone) {
-			// Initialize mocks created above
-		    MockitoAnnotations.initMocks(this);
-		    setUpIsDone = true;
-		}
-	    
+		MockitoAnnotations.initMocks(this);
 	}
 
 	

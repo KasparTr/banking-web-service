@@ -89,7 +89,7 @@ public class AccountServiceImpl implements AccountService{
 		if(account.isPresent()) {
 			return CompletableFuture.completedFuture(account.get());
 		}else {
-			throw new BankAccountException("Not bank account found with id: " + id);
+			throw new BankAccountException("No bank account found with id: " + id);
 		}
 	}
 
