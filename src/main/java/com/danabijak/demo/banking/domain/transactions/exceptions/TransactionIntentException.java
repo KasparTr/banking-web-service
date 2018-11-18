@@ -4,8 +4,8 @@ package com.danabijak.demo.banking.domain.transactions.exceptions;
 // - intent publish exception
 // - intent validation exception
 // - other...
-public class TransactionIntentPublishException extends RuntimeException {
-	public TransactionIntentPublishException(String message) {
+public class TransactionIntentException extends RuntimeException {
+	public TransactionIntentException(String message) {
 		super(message);
 	}
 }

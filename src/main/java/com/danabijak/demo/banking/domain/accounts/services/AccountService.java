@@ -45,7 +45,7 @@ public interface AccountService {
 	public CompletableFuture<AccountTransactions> getTransactionsOf(BankAccount account) throws BankAccountException;
 	
 	/**
-	 * Get all transaction of the specified bank account
+	 * Get bank account by account ID
 	 * @param account
 	 * @return
 	 * @throws TransactionServiceException
@@ -54,7 +54,7 @@ public interface AccountService {
 	public CompletableFuture<BankAccount> getBankAccount(long id) throws BankAccountException;
 	
 	/**
-	 * Get all transaction of the specified bank account as a statement
+	 * Get a statement of transaction history of a bank account by account ID
 	 * @param account
 	 * @return
 	 * @throws TransactionServiceException

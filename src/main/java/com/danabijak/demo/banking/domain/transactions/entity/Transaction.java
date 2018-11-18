@@ -50,4 +50,8 @@ public class Transaction {
 				", details=" + details + '}';
 
 	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
 }

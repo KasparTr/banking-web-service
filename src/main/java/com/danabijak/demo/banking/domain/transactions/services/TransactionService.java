@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.domain.transactions.entity.Transaction;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
+import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionNotFoundException;
 import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionServiceException;
 
 @Service
@@ -35,7 +36,7 @@ public interface TransactionService {
 	 * @throws TransactionServiceException
 	 */
 	@Async("asyncExecutor")
-	public CompletableFuture<Transaction> findTransactionBy(long id) throws TransactionServiceException;
+	public CompletableFuture<Transaction> findTransactionBy(long id) throws TransactionNotFoundException;
 
 
 }

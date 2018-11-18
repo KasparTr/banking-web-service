@@ -25,4 +25,8 @@ public class AccountStatementResponse {
 		this.createdAt = new Date();
 		this.totalBalance = totalBalance;
 	}
+	
+	public String toString() {
+		return "bankAccountId: " + bankAccountId + ", " + "createdAt: " + createdAt;
+	}
 }

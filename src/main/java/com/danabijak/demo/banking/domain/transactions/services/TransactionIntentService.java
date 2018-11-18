@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentPublishException;
+import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentException;
 
 /**
  * TransactionIntentService is a service that publishes transaction intents into a message channel.
@@ -23,9 +23,9 @@ public interface TransactionIntentService {
 	 * Returns a new published intent object that has been changed from the argument intent .
 	 * @param intent - Intent draft for a future transaction.
 	 * @return - Published intent that has been changed from the argument intent
-	 * @throws TransactionIntentPublishException - if something goes horribly wrong here.
+	 * @throws TransactionIntentException - if something goes horribly wrong here.
 	 */
 	@Async("asyncExecutor")
-	public CompletableFuture<TransactionIntent> publish(TransactionIntent intent) throws TransactionIntentPublishException;
+	public CompletableFuture<TransactionIntent> publish(TransactionIntent intent) throws TransactionIntentException;
 	
 }

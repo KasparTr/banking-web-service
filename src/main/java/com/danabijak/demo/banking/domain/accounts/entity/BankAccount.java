@@ -99,6 +99,12 @@ public class BankAccount {
 	public void setStatus(STATUS status) {
 		this.status = status;
 	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	
 	
 	
 	

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.danabijak.demo.banking.core.ValidationReport;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
-import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentPublishException;
+import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentException;
 import com.danabijak.demo.banking.domain.transactions.repositories.TransactionIntentRepository;
 
 @Service
@@ -18,7 +18,7 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 	
 	@Override
 	@Async("asyncExecutor")
-	public CompletableFuture<TransactionIntent> publish(TransactionIntent intent) throws TransactionIntentPublishException {
+	public CompletableFuture<TransactionIntent> publish(TransactionIntent intent) throws TransactionIntentException {
 	    ValidationReport validationReport = validateIntent(intent);
 		
 		if(validationReport.valid) {
@@ -27,7 +27,7 @@ public abstract class TransactionIntentServiceImpl implements TransactionIntentS
 			publishToChannel(intent);
 			return CompletableFuture.completedFuture(intent);
 		}else {
-			throw new TransactionIntentPublishException("Transaction intent not publised. Errors: " + validationReport.generateStringMessage());
+			throw new TransactionIntentException("Transaction intent not publised. Errors: " + validationReport.generateStringMessage());
 		}
 	}
 

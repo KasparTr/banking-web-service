@@ -37,19 +37,14 @@ public abstract class TransactionServiceImpl implements TransactionService{
 	@Override
 	@Async("asyncExecutor")
 	public CompletableFuture<Transaction> process(TransactionIntent intent) throws TransactionServiceException {
-		System.out.println("TransactionServiceImp | processing intent: " + intent.toString());
+		// TODO: Validate intent here against bank account and entity limits. Don't just believe the intent flag
 		try {
 			if(intent.isValid()) {				
-				Transaction transaction = processIntent(intent);
-				CompletableFuture<Transaction> future = new CompletableFuture<>();
-				future.complete(transaction);
-				return future;
+				return CompletableFuture.completedFuture(processIntent(intent));
 			}else {
 				throw new TransactionServiceException("Transaction intent is not valid. Transaction not made!");
 			}
 		}catch(Exception e) {
-			System.out.println("TransactionServiceImp | processing | error: " + e.getMessage());
-
 			throw new TransactionServiceException("Cannot process intent, error: " + e.getMessage());
 		}
 		
@@ -60,27 +55,21 @@ public abstract class TransactionServiceImpl implements TransactionService{
 	public CompletableFuture<Transaction> findTransactionBy(long id) throws TransactionNotFoundException {
 		Optional<Transaction> transaction = transactionRepo.findById(id);
 		
-		if(transaction.isPresent()) {
-			CompletableFuture<Transaction> future = new CompletableFuture<>();
-			future.complete(transaction.get());
-			return future;
-		}
+		if(transaction.isPresent())
+			return CompletableFuture.completedFuture(transaction.get());
 		else 
 			throw new TransactionNotFoundException(String.format("Transaction with ID %s not found", id));
 
 	}
 	
 	private Transaction processIntent(TransactionIntent intent) throws TransactionServiceException{
-		
-		updateBalances(intent);
+		updateBalances(intent);		
 		
 		Transaction transaction = new Transaction(
 				intent.amount, 
 				intent.beneficiary.getBankAccount(), 
 				intent.source.getBankAccount(), 
 				"Successfully made transaction");
-		
-		System.out.println("transactionRepo: " + transactionRepo);
 		
 		transactionRepo.save(transaction);
 		intent.setPaidTo(true);

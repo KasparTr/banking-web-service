@@ -24,7 +24,7 @@ import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentBuilder;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentPublishException;
+import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentException;
 import com.danabijak.demo.banking.domain.transactions.repositories.TransactionIntentRepository;
 import com.danabijak.demo.banking.domain.transactions.services.DepositIntentService;
 import com.danabijak.demo.banking.domain.transactions.validators.DepositIntentValidator;

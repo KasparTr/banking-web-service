@@ -37,7 +37,8 @@ public class TransactionIntentFactory {
 					.source(bUser)
 					.amount(money)
 					.build();
-		    
+			System.out.println("createDepositIntent() | Intent built: "+intent.toString());
+
 		    return intent;
 			
 		});
@@ -66,5 +67,4 @@ public class TransactionIntentFactory {
 			
 		});
 	}
-
 }

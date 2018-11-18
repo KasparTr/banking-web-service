@@ -1,6 +1,7 @@
-package com.danabijak.demo.banking.services;
+package com.danabijak.demo.banking.domain.transactions.services;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntent;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentBuilder;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus;
 import com.danabijak.demo.banking.domain.transactions.entity.TransactionIntentStatus.TRANSFER_STATUS;
-import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentPublishException;
+import com.danabijak.demo.banking.domain.transactions.exceptions.TransactionIntentException;
 import com.danabijak.demo.banking.domain.transactions.repositories.TransactionIntentRepository;
 import com.danabijak.demo.banking.domain.transactions.services.DepositIntentService;
 import com.danabijak.demo.banking.domain.users.entity.User;
@@ -55,8 +56,26 @@ public class DepositIntentServiceTests {
 		
 	}
 	
-	@Test(expected = TransactionIntentPublishException.class)
-	public void testAttemptPublish_invalid_intent_throws(){
+	@Test
+	public void testAttemptPublish_invalid_intent_is_not_saved_to_repo(){
+		User beneficiary = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(30);
+		User source = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(30);
+		
+		TransactionIntent invalidIntent = new TransactionIntentBuilder()
+				.status(new TransactionIntentStatus(TRANSFER_STATUS.CREATED, "Deposit"))
+				.beneficiary(beneficiary)
+				.source(source)
+				.amount(Money.of(CurrencyUnit.USD, 12309133.45))
+				.build();
+		try {
+			depositIntentService.publish(invalidIntent);		
+		}catch(TransactionIntentException e) {
+			verify(transactionIntentRepo, never()).save(invalidIntent); 
+		}
+	}
+	
+	@Test(expected = TransactionIntentException.class)
+	public void testAttemptPublish_dont_publish_invalid_intent_but_throw(){
 		User beneficiary = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(30);
 		User source = GlobalMethodsForTesting.getDummyUserWithBankAccountSetTo(30);
 		

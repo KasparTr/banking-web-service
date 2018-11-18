@@ -24,11 +24,7 @@ public class AccountServiceImpl implements AccountService{
 	private TransactionRepository transactionRepo;
 	
 	@Autowired
-	private AccountRepository accountRepository;
-	
-	@Autowired
-	private BankAccountStatementFactory baStatementFactory;
-	
+	private AccountRepository accountRepository;	
 	
 	@Override
 	@Async("asyncExecutor")
@@ -98,6 +94,7 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	@Async("asyncExecutor")
 	public CompletableFuture<AccountStatementResponse> getAccountStatement(long id) throws BankAccountException {
+		BankAccountStatementFactory baStatementFactory = new BankAccountStatementFactory();
 		CompletableFuture<BankAccount> accountFuture = getBankAccount(id);
 		
 		return accountFuture.thenCompose(account -> {
@@ -107,7 +104,6 @@ public class AccountServiceImpl implements AccountService{
 				AccountStatementResponse statement = baStatementFactory.generateStatement(
 						account, 
 						transactions);
-
 				return statement;
 			});
 			
